@@ -1,7 +1,5 @@
 ﻿[global]
 name = Klondike (hard)
-# 1 win of N games - not used now
-chance = 5
 # Number of decks: 1 or 2
 decks = 1
 
