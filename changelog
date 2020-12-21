@@ -1,0 +1,11 @@
+solkit (0.4.3) unstable; urgency=medium
+
+  * Added "American toad" solitaire
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Mon, 07 Dec 2020 10:56:30 -0800
+
+solkit (0.4.0) unstable; urgency=medium
+
+  * Loading custom solitaire rules
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Fri, 27 Nov 2020 19:43:49 -0800

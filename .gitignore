@@ -5,3 +5,6 @@
 *.gz
 *.rar
 *.log
+*.xcf
+*.desc
+config.toml

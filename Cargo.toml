@@ -1,0 +1,23 @@
+[package]
+name = "solkit"
+version = "0.4.4"
+authors = ["Vladimir Markelov <vmatroskin@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+crossterm = "0.18"
+nanorand="0.4"
+anyhow = "1.0"
+thiserror = "1.0"
+bitflags = "1.0"
+log = "^0.4.0"
+unicode-width = "0.1.5"
+dirs = "1.0"
+toml = "0.5"
+serde = "1.0"
+serde_derive = "1.0"
+getopts = "0.2"
+simplelog = "0.7"
+
