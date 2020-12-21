@@ -1,3 +1,10 @@
+solkit (0.4.4) unstable; urgency=medium
+
+  * Added documetation
+  * Example solitaire fixes
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Sun, 20 Dec 2020 19:57:41 -0800
+
 solkit (0.4.3) unstable; urgency=medium
 
   * Added "American toad" solitaire
