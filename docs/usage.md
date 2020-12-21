@@ -15,7 +15,7 @@
 
 Play area for every solitaire may contain up to 5 areas: 2 mandatory (columns and foundations) and optional ones(deck, waste, and free cells).
 
-<img src="./docs/solkit_terms.png" alt="SolKit Layout">
+<img src="solkit_terms.png" alt="SolKit Layout">
 
 1. `Deck` is in the left top corner(marked with character `d`). It is a pile of face-down cards that can be put to waste or to columns.
 2. `Waste` is in the left top corner next to the right of the `deck`. It is a pile for cards dealt from the `deck`. If the `deck` is absent, dealt cards are put to columns.
