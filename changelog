@@ -1,3 +1,10 @@
+solkit (0.4.5) unstable; urgency=medium
+
+  * Logging is disabled by default
+  * Added command-line option `--log` to enable logging
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Tue, 22 Dec 2020 13:14:31 -0800
+
 solkit (0.4.4) unstable; urgency=medium
 
   * Added documetation

@@ -168,8 +168,10 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
 fn main() -> Result<()> {
     let cli = opts::parse_args();
 
-    let cb = ConfigBuilder::new().set_time_format("[%Y-%m-%d %H:%M:%S%.3f]".to_string()).build();
-    CombinedLogger::init(vec![WriteLogger::new(LevelFilter::Info, cb, File::create("app.log").unwrap())]).unwrap();
+    if cli.logging {
+        let cb = ConfigBuilder::new().set_time_format("[%Y-%m-%d %H:%M:%S%.3f]".to_string()).build();
+        CombinedLogger::init(vec![WriteLogger::new(LevelFilter::Info, cb, File::create("app.log").unwrap())]).unwrap();
+    }
     // info!("started");
 
     let mut stdout = stdout();

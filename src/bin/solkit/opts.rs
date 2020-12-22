@@ -8,6 +8,7 @@ const APP_NAME: &str = "Solitaire Kit";
 pub(crate) struct CliOpts {
     pub(crate) dark: bool,
     pub(crate) filename: String,
+    pub(crate) logging: bool,
 }
 
 fn print_usage(program: &str, opts: &Options) {
@@ -18,12 +19,13 @@ fn print_usage(program: &str, opts: &Options) {
 pub(crate) fn parse_args() -> CliOpts {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
-    let mut cli = CliOpts { dark: true, filename: String::new() };
+    let mut cli = CliOpts { dark: true, filename: String::new(), logging: false };
 
     let mut opts = Options::new();
     opts.optflag("h", "help", "Show this help");
     opts.optopt("t", "theme", "Choose UI theme", "dark | classic");
     opts.optflag("v", "version", "Show application version");
+    opts.optflag("", "log", "Enable logging");
 
     let matches: Matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
@@ -44,6 +46,7 @@ pub(crate) fn parse_args() -> CliOpts {
         print_usage(&program, &opts);
         exit(0);
     }
+    cli.logging = matches.opt_present("log");
 
     if let Some(val) = matches.opt_str("t") {
         cli.dark = match val.to_lowercase().as_str() {
