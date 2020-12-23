@@ -12,6 +12,7 @@ use crate::strategy::{Context, Strategy, Transition, TransitionStage};
 use crate::theme::Theme;
 use crate::ui::{area_width, draw_area};
 
+// main "dialog" - playing a solitaire
 pub(crate) struct PlayStg<'a> {
     game: Game<'a>,
 }

@@ -14,6 +14,7 @@ const TR_CORNER: usize = 3;
 const DL_CORNER: usize = 4;
 const DR_CORNER: usize = 5;
 
+// low-level display primitives: lines, boxes, messages
 pub(crate) struct Screen {
     buf: Buffer,
     fg: Color,
@@ -68,6 +69,7 @@ impl Screen {
         }
     }
 
+    // display text in backticks in different color
     pub(crate) fn write_string_highlight(&mut self, s: &str, col: u16, row: u16, ext_color: Color) {
         if s.is_empty() {
             return;
@@ -170,6 +172,7 @@ impl Screen {
         self.buf.resize(new_w, new_h)
     }
 
+    // print changed cells to the screen
     pub(crate) fn flush<W>(&mut self, w: &mut W) -> Result<()>
     where
         W: Write,

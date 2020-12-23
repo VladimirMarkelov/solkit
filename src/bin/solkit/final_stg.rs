@@ -13,6 +13,7 @@ const ITEM_HEIGHT: u16 = 3;
 const MENU_WIDTH: u16 = 28;
 const MENU_ITEMS: [&str; 3] = ["Play again", "Choose solitaire", "Exit application"];
 
+// menu displayed on ESC or when a solitaire is solved
 pub(crate) struct FinalStg {
     selected: usize,
 }

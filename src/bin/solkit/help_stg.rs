@@ -32,6 +32,7 @@ const DLG_ITEMS: [&str; 20] = [
     "    location (priority: foundation, play area, additional area).",
 ];
 
+// basic help dialog
 pub(crate) struct HelpStg {}
 
 impl HelpStg {

@@ -10,6 +10,7 @@ use solkit::card::{Face, Suit};
 use solkit::err::SolError;
 use solkit::gconf::{ColConf, Conf, FaceOrder, FndSlot, PileConf, Playable, SuitOrder, TempConf};
 
+// return either pre-defined list of solitaires or a single one loaded from a file
 pub(crate) fn load_rules(filename: Option<String>) -> Result<HashMap<String, Conf>, SolError> {
     match filename {
         Some(s) => custom_rule(&s),

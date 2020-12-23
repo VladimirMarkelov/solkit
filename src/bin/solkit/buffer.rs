@@ -14,6 +14,8 @@ impl Default for Cell {
     }
 }
 
+// for optimized output, each screen flush detects changes cells and prints only them.
+// BufIterator goes though all screen cells and yield all the changed ones.
 pub struct CellDiff {
     pub cell: Cell,
     pub col: u16,
@@ -74,12 +76,14 @@ impl Buffer {
         Ok(Buffer { w, h, what: vec![0; sz], display: vec![Cell::default(); sz], back: vec![Cell::default(); sz] })
     }
 
+    // copy data from the back buffer to the screen buffer
     pub fn flip(&mut self) {
         for (idx, val) in self.back.iter().enumerate() {
             self.display[idx] = *val;
         }
     }
 
+    // fill the back buffer with spaces and given color attributes
     pub fn clear(&mut self, fg: Color, bg: Color) {
         let sz = usize::from(self.w) * usize::from(self.h);
         let cell = Cell { ch: ' ', fg, bg };
@@ -87,6 +91,7 @@ impl Buffer {
         self.what = vec![0; sz];
     }
 
+    // resize screen and back buffers. Old data is preserved if possible (when the area grows)
     pub fn resize(&mut self, new_w: u16, new_h: u16) -> Result<()> {
         if new_w < 60 || new_w > 1500 {
             return Err(anyhow!("Width must be between 60 and 1500"));

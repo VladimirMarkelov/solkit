@@ -5,6 +5,7 @@ use getopts::{Matches, Options};
 
 const APP_NAME: &str = "Solitaire Kit";
 
+// Options passed via commnd-line
 pub(crate) struct CliOpts {
     pub(crate) dark: bool,
     pub(crate) filename: String,

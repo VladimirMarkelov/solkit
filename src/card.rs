@@ -60,19 +60,19 @@ fn suit_to_i8(s: Suit) -> i8 {
 }
 fn i8_to_face(f: i8) -> Face {
     match f {
-        0 => Face::N2,
-        1 => Face::N3,
-        2 => Face::N4,
-        3 => Face::N5,
-        4 => Face::N6,
-        5 => Face::N7,
-        6 => Face::N8,
-        7 => Face::N9,
-        8 => Face::N10,
-        9 => Face::J,
-        10 => Face::Q,
-        11 => Face::K,
-        12 => Face::A,
+        0 => Face::A,
+        1 => Face::N2,
+        2 => Face::N3,
+        3 => Face::N4,
+        4 => Face::N5,
+        5 => Face::N6,
+        6 => Face::N7,
+        7 => Face::N8,
+        8 => Face::N9,
+        9 => Face::N10,
+        10 => Face::J,
+        11 => Face::Q,
+        12 => Face::K,
         _ => panic!("Invalid face ID"),
     }
 }
@@ -138,6 +138,7 @@ impl Card {
         let that_red = other.suit == Suit::Diamond || other.suit == Suit::Heart;
         (this_red && that_red) || (!this_red && !that_red)
     }
+    // positive difference means other's face value is higher
     pub fn diff(&self, other: &Card) -> i8 {
         if other.face == Face::A && self.face == Face::K {
             return 1;
@@ -150,23 +151,8 @@ impl Card {
     pub fn is_empty(&self) -> bool {
         self.face == Face::Empty
     }
-    pub fn is_unavail(&self) -> bool {
-        self.face == Face::Unavail
-    }
     pub fn is_up(&self) -> bool {
         self.up
-    }
-    pub fn value(&self) -> i8 {
-        face_to_i8(self.face)
-    }
-    pub fn is_face_next(&self, other: &Card) -> bool {
-        face_to_i8(other.face) - face_to_i8(self.face) == 1
-    }
-    pub fn is_face_prev(&self, other: &Card) -> bool {
-        face_to_i8(other.face) - face_to_i8(self.face) == -1
-    }
-    pub fn flip(&mut self, up: bool) {
-        self.up = up;
     }
 }
 
@@ -238,6 +224,24 @@ mod card_test {
             assert_eq!(diff, df.d);
             let diff = df.s.diff(&df.f);
             assert_eq!(diff, -df.d);
+        }
+    }
+
+    #[test]
+    fn facei8() {
+        for face_id in 0i8..12i8 {
+            let face = i8_to_face(face_id);
+            let id = face_to_i8(face);
+            assert_eq!(face_id, id);
+        }
+    }
+
+    #[test]
+    fn suiti8() {
+        for suit_id in 0i8..3i8 {
+            let suit = i8_to_suit(suit_id);
+            let id = suit_to_i8(suit);
+            assert_eq!(suit_id, id);
         }
     }
 }

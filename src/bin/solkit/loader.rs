@@ -4,6 +4,7 @@ use solkit::gconf::{
     str_to_face_order, str_to_suit_order, ColConf, Conf, FaceOrder, FndSlot, PileConf, Playable, SuitOrder, TempConf,
 };
 
+// load a solitaire rules from a UTF-8 text file
 pub(crate) fn load_config(data: &[String]) -> Result<Conf, SolError> {
     let mut conf = Conf::new();
     let mut idx = 0usize;

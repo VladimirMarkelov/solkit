@@ -5,6 +5,7 @@ use serde_derive::{Deserialize, Serialize};
 
 use crate::config::stats_path;
 
+// solitaire statistics
 #[derive(Clone, Serialize, Deserialize)]
 pub(crate) struct GameStat {
     pub(crate) played: u64,
@@ -17,6 +18,7 @@ impl Default for GameStat {
     }
 }
 
+// all solitaires statistics
 #[derive(Serialize, Deserialize)]
 pub(crate) struct Stats {
     pub(crate) games: HashMap<String, GameStat>,

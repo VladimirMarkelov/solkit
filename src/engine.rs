@@ -33,11 +33,12 @@ pub struct SlotConf {
     pub flip: bool,
     // cannot put card to this pile from any other one
     pub take_only: bool,
-    // draw top card only or all in a long column
+    // draw top card only or all in a tall column
     pub draw_all: bool,
 }
 
 impl SlotConf {
+    // default settings for a foundation pile
     pub fn new_for_fnd() -> Self {
         SlotConf {
             selectable: true,
@@ -53,6 +54,7 @@ impl SlotConf {
             draw_all: false,
         }
     }
+    // default settings for a column pile
     pub fn new_for_col() -> Self {
         SlotConf {
             selectable: true,
@@ -68,6 +70,7 @@ impl SlotConf {
             draw_all: true,
         }
     }
+    // default settings for a free-cell pile
     pub fn new_for_temp() -> Self {
         SlotConf {
             selectable: true,
@@ -83,6 +86,7 @@ impl SlotConf {
             draw_all: false,
         }
     }
+    // default settings for deck and waste piles
     pub fn new_for_pile() -> Self {
         SlotConf {
             selectable: true,
@@ -106,12 +110,14 @@ pub struct Pile {
     pub cards: CardList,
 }
 
+// game snapshot
 struct Undo {
     redeals: i8,
     piles: Vec<CardList>,
     selected: Pos,
 }
 
+// cursor movement direction
 pub enum Direction {
     Up,
     Down,
@@ -124,6 +130,7 @@ pub enum Direction {
     Temp,
 }
 
+// cursor position in a play area
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Pos {
     pub col: usize,
@@ -146,12 +153,12 @@ impl Pos {
 }
 
 pub struct Game<'a> {
-    conf: &'a Conf,
-    deck: Deck,
-    selected: Pos,
-    undo: UndoList,
+    conf: &'a Conf, // selected solitaire rules
+    deck: Deck, // a deck
+    selected: Pos, // position of the cursor in play area
+    undo: UndoList, // list of game snapshots
     piles: Vec<Pile>, // order: fnd, cols, temp, pile
-    redeals: i8,
+    redeals: i8, // redeals left
 }
 
 impl<'a> Game<'a> {
@@ -160,6 +167,7 @@ impl<'a> Game<'a> {
         let redeals = conf.redeals();
         let mut g = Game { conf, deck, undo: Vec::new(), piles: Vec::new(), selected: Pos::new(), redeals };
         g.init_cols()?;
+        // at start the current card is always the first one in the first column
         g.selected = Pos { col: g.first_col().unwrap(), row: 0 };
         Ok(g)
     }
@@ -168,6 +176,7 @@ impl<'a> Game<'a> {
         self.redeals
     }
 
+    // can the position be selected with cursor (can the card be played during this move)
     pub fn is_selectable(&self, pos: Option<Pos>) -> bool {
         let pos = if let Some(p) = pos { p } else { self.selected };
         if pos.col >= self.piles.len() {
@@ -190,6 +199,7 @@ impl<'a> Game<'a> {
         }
     }
 
+    // sets the cursor to the card if it is playable
     pub fn select(&mut self, pos: Pos) {
         if !self.is_selectable(Some(pos)) {
             return;
@@ -197,6 +207,7 @@ impl<'a> Game<'a> {
         self.selected = pos;
     }
 
+    // if Space/Enter/Left-Mouse clicked when the selected card is deck
     pub fn is_deck_clicked(&self, pos: Option<Pos>) -> bool {
         let pos = if let Some(p) = pos { p } else { self.selected };
         match self.first_pile() {
@@ -205,10 +216,12 @@ impl<'a> Game<'a> {
         }
     }
 
+    // number of columns in play area
     pub fn column_count(&self) -> usize {
         self.piles.len()
     }
 
+    // the number of top cards of a column that are already in correct order
     pub fn ordered_count(&self, pile_id: usize) -> usize {
         let col_start = self.first_col().unwrap(); // TODO:
         let col_cnt = self.col_count();
@@ -245,6 +258,8 @@ impl<'a> Game<'a> {
         cnt
     }
 
+    // returns true if the card at position pos(or a few cards if the card is not the top one) can
+    // be moved to the top of pile with ID pile_id
     fn can_move(&self, pos: Pos, pile_id: usize) -> bool {
         let card = self.card_at(pos);
         if !card.up || card.is_empty() || pile_id >= self.piles.len() {
@@ -281,28 +296,35 @@ impl<'a> Game<'a> {
         ok_face && ok_suit
     }
 
+    // return the currently selected card
     pub fn selected_loc(&self) -> Pos {
         self.selected
     }
 
+    // return the ID of the deck
     pub fn first_pile(&self) -> Option<usize> {
         self.conf.pile.map(|_| self.fnd_count() + self.col_count() + self.temp_count())
     }
 
+    // return the ID of the first free-cell pile
     pub fn first_temp(&self) -> Option<usize> {
         self.conf.temp.map(|_| self.fnd_count() + self.col_count())
     }
 
+    // return the ID of the first foundation pile
     pub fn first_fnd(&self) -> Option<usize> {
         // Fnd always exists and it is always the first
         Some(0)
     }
 
+    // return the ID of the first columns
     pub fn first_col(&self) -> Option<usize> {
         // Cols always exist and it goes after the fnd
         Some(self.fnd_count())
     }
 
+    // return the ID of the first cards in the pile that is face-up. All cards after it are always
+    // face-up ones as well.
     fn first_up(&self, col_idx: usize) -> usize {
         let mut mx = 0usize;
         let l = self.piles[col_idx].cards.len();
@@ -315,6 +337,7 @@ impl<'a> Game<'a> {
         mx
     }
 
+    // select the upper card in a pile if the card is playable. Do not move cursor otherwise
     fn do_up_for_col(&self, col_idx: usize, curr: usize) -> usize {
         if self.piles[col_idx].cards.len() < 2 {
             return curr;
@@ -327,6 +350,8 @@ impl<'a> Game<'a> {
         }
     }
 
+    // select the next pile of the same type. If it is the last one, selects the first pile of the
+    // same type(looped selection).
     fn move_next_pile_of_type(&mut self, first: usize, count: usize) {
         if self.selected.col < first || self.selected.col >= first + count {
             self.selected = Pos { col: first, row: 0 };
@@ -339,6 +364,7 @@ impl<'a> Game<'a> {
         }
     }
 
+    // move cursor to the defined direction
     pub fn move_selection(&mut self, dir: Direction) -> bool {
         match dir {
             Direction::Right => {
@@ -501,7 +527,8 @@ impl<'a> Game<'a> {
         loc
     }
 
-    // return all locations on which the card can be put
+    // return all locations on which the card can be put.
+    // In the following order: foundations, columns, free cells.
     pub fn dest_list_card(&self, from: Pos) -> Vec<Pos> {
         let card = self.card_at(from);
         let mut dests = Vec::new();
@@ -519,6 +546,8 @@ impl<'a> Game<'a> {
         dests
     }
 
+    // rollback the game to the previous snapshot if exists. The snapshot is deleted, so redo is
+    // unavailable.
     pub fn undo(&mut self) {
         if self.undo.is_empty() {
             return;
@@ -531,14 +560,17 @@ impl<'a> Game<'a> {
         }
     }
 
+    // empty the list of game snapshots, e.g. after winning the game
     pub fn clear_undo(&mut self) {
         self.undo.clear();
     }
 
+    // the number of saved snapshots
     pub fn undo_count(&self) -> usize {
         self.undo.len()
     }
 
+    // create a game snapshot
     pub fn take_snapshot(&mut self) {
         let mut undo = Undo { redeals: self.redeals, piles: Vec::new(), selected: self.selected };
         for pile in self.piles.iter() {
@@ -547,6 +579,7 @@ impl<'a> Game<'a> {
         self.undo.push(undo);
     }
 
+    // compare two last game snapshots. If they equal, the latest one is removed
     pub fn squash_snapshots(&mut self) {
         let l = self.undo.len();
         if l < 2 {
@@ -565,6 +598,9 @@ impl<'a> Game<'a> {
         self.undo.pop();
     }
 
+    // move a card(or a few ones if the card is not at the top of its pile), if possible.
+    // If "from" is empty, the currently marked or selected card is moved.
+    // If "to" is empty, the card is moved to the first suitable location, if exists.
     pub fn move_card(&mut self, from: Pos, to: Pos) -> Result<(), SolError> {
         let from = if from.is_empty() {
             if self.selected.is_empty() {
@@ -596,7 +632,6 @@ impl<'a> Game<'a> {
             return Err(SolError::NoDestination);
         }
         if !self.can_move(from, to.col) {
-            info!("impossible");
             return Err(SolError::InvalidMove);
         }
 
@@ -626,6 +661,7 @@ impl<'a> Game<'a> {
         Ok(())
     }
 
+    // return a card at a given position or empty card if position is invalid.
     fn card_at(&self, loc: Pos) -> Card {
         if loc.is_empty() || loc.col >= self.piles.len() {
             return Card::new_empty();
@@ -637,6 +673,7 @@ impl<'a> Game<'a> {
         self.piles[loc.col].cards[l - 1 - loc.row]
     }
 
+    // detect a solitaire win.
     pub fn is_completed(&self) -> bool {
         let wl = self.first_fnd().unwrap();
         let wc = self.fnd_count();
@@ -651,14 +688,17 @@ impl<'a> Game<'a> {
         true
     }
 
+    // returns true is any game snapshot exists
     pub fn has_undo(&self) -> bool {
         !self.undo.is_empty()
     }
 
+    // return the number of foundation piles
     pub fn fnd_count(&self) -> usize {
         self.conf.fnd.len()
     }
 
+    // return the number of free-cell piles
     pub fn temp_count(&self) -> usize {
         match self.conf.temp {
             None => 0,
@@ -666,10 +706,12 @@ impl<'a> Game<'a> {
         }
     }
 
+    // return the number of columns
     pub fn col_count(&self) -> usize {
         self.conf.cols.len()
     }
 
+    // return the number of deck+waste
     pub fn pile_count(&self) -> usize {
         if let Some(ref pconf) = self.conf.pile {
             if pconf.pile_to_cols {
@@ -682,6 +724,7 @@ impl<'a> Game<'a> {
         }
     }
 
+    // return a pile's configuration
     pub fn slot_conf(&self, pos: usize) -> Result<&SlotConf, SolError> {
         if pos >= self.piles.len() {
             return Err(SolError::InvalidLocation);
@@ -689,6 +732,7 @@ impl<'a> Game<'a> {
         Ok(&self.piles[pos].conf)
     }
 
+    // return cards in a deck(0) or in a waste(1)
     pub fn pile(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.pile_count() {
             return Err(SolError::InvalidLocation);
@@ -697,6 +741,7 @@ impl<'a> Game<'a> {
         Ok(&self.piles[pp].cards)
     }
 
+    // return cards in a given foundation pile
     pub fn fnd(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.fnd_count() {
             return Err(SolError::InvalidLocation);
@@ -705,6 +750,7 @@ impl<'a> Game<'a> {
         Ok(&self.piles[wp].cards)
     }
 
+    // return cards in a given free-cell pile
     pub fn temp(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.temp_count() {
             return Err(SolError::InvalidLocation);
@@ -713,6 +759,7 @@ impl<'a> Game<'a> {
         Ok(&self.piles[tp].cards)
     }
 
+    // return cards in a given column
     pub fn col(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.col_count() {
             return Err(SolError::InvalidLocation);
@@ -721,6 +768,8 @@ impl<'a> Game<'a> {
         Ok(&self.piles[cp].cards)
     }
 
+    // initialize a list of card in a pile. The pile contains exactly "count" cards and "up" of
+    // them are face-up.
     fn gen_list(&mut self, count: usize, up: usize) -> Result<CardList, SolError> {
         let mut col = Vec::new();
         for i in 0..count {
@@ -737,6 +786,7 @@ impl<'a> Game<'a> {
         Ok(col)
     }
 
+    // define all piles configurations(rules) at the solitaire initialization
     fn init_piles(&mut self) {
         // order: fnd, cols, temp, pile
         for idx in 0..self.fnd_count() {
@@ -776,6 +826,7 @@ impl<'a> Game<'a> {
         }
     }
 
+    // deal cards to all piles at the solitaire initialization
     pub fn init_cols(&mut self) -> Result<(), SolError> {
         self.init_piles();
         let idx = self.first_col().unwrap();
@@ -840,6 +891,8 @@ impl<'a> Game<'a> {
         crd.up
     }
 
+    // return true if "deck" is playable: either the deck is non-empty or the waste is non-empty
+    // and the number of redeals is greater than zero.
     pub fn can_deal(&self) -> bool {
         if self.pile_count() == 0 {
             return false;
@@ -851,6 +904,8 @@ impl<'a> Game<'a> {
         !self.piles[idx].cards.is_empty() || self.redeals != 0
     }
 
+    // deal one or a few cards from "deck" to "waste" if it exists, to directly to columns.
+    // When dealing to columns, it always put one new card to the top of each column.
     pub fn deal(&mut self) -> bool {
         if self.pile_count() == 0 {
             return false;
@@ -861,6 +916,7 @@ impl<'a> Game<'a> {
         }
 
         if let Some(ref pconf) = self.conf.pile {
+            // deal to columns
             if pconf.pile_to_cols {
                 let col_first = self.first_col().unwrap();
                 for col_idx in 0..self.col_count() {
@@ -878,6 +934,7 @@ impl<'a> Game<'a> {
             }
         }
 
+        // if the deck is empty, move cards from the "waste" to the "deck" at first
         if self.piles[idx].cards.is_empty() && !self.piles[idx + 1].cards.is_empty() {
             self.redeals -= 1;
             while !self.piles[idx + 1].cards.is_empty() {
@@ -889,6 +946,7 @@ impl<'a> Game<'a> {
         if self.piles[idx].cards.is_empty() {
             return false;
         }
+        // put a few top cards to the "waste"
         let mut cnt = self.conf.deal_by();
         while !self.piles[idx].cards.is_empty() && cnt != 0 {
             let mut crd = self.piles[idx].cards.pop().unwrap();

@@ -10,6 +10,7 @@ use crate::primitive::{Border, Screen};
 use crate::strategy::{Context, Strategy, Transition, TransitionStage};
 use crate::theme::Theme;
 
+// dialog to select a solitaire from a list
 pub(crate) struct ChooseStg {
     sols: Vec<String>,
     selected: u16,
