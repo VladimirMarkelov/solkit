@@ -55,14 +55,6 @@ fn parse_global(conf: &mut Conf, data: &[String], idx: usize) -> Result<usize, S
     Ok(idx)
 }
 
-// fn str_to_bool(s: &str, opt: &str) -> Result<bool, SolError> {
-//     match s {
-//         "0" | "yes" | "true" => Ok(true),
-//         "1" | "no" | "false" => Ok(false),
-//         _ => Err(SolError::InvalidConfOptionValue(opt.to_string(), s.to_string())),
-//     }
-// }
-
 fn parse_deck(conf: &mut Conf, data: &[String], idx: usize) -> Result<usize, SolError> {
     let mut idx = idx;
     let mut pconf = PileConf { deal_by: 0, redeals: 0, pile_to_cols: false };
@@ -107,6 +99,7 @@ fn parse_deck(conf: &mut Conf, data: &[String], idx: usize) -> Result<usize, Sol
     conf.pile = Some(pconf);
     Ok(idx)
 }
+
 fn parse_foundation(conf: &mut Conf, data: &[String], idx: usize) -> Result<usize, SolError> {
     let mut idx = idx;
     let mut fnd: Vec<FndSlot> = Vec::new();

@@ -112,15 +112,6 @@ struct Undo {
     selected: Pos,
 }
 
-/*
-pub struct PileStats {
-    // Opened card - that a user sees (for Pile: top card from the right)
-    pub top: Card,
-    // For Pile: cards in the right side (opened); for others: total count of cards
-    pub count: usize,
-}
-*/
-
 pub enum Direction {
     Up,
     Down,
@@ -256,9 +247,7 @@ impl<'a> Game<'a> {
 
     fn can_move(&self, pos: Pos, pile_id: usize) -> bool {
         let card = self.card_at(pos);
-        // info!("try moving {:?} to {}", card, pile_id);
         if !card.up || card.is_empty() || pile_id >= self.piles.len() {
-            // info!("try moving {:?} to {}: bad card", card, pile_id);
             return false;
         }
         let pile = &self.piles[pile_id];
@@ -266,14 +255,12 @@ impl<'a> Game<'a> {
             return false;
         }
         if pile.conf.take_only || (!pile.conf.refill && pile.cards.is_empty()) {
-            // info!("try moving {:?} to {}: pile is take only", card, pile_id);
             return false;
         }
 
         if pile.cards.is_empty() {
             let ok_suit = pile.conf.start_suit == Suit::Any || pile.conf.start_suit == card.suit;
             let ok_face = pile.conf.start_face == Face::Any || pile.conf.start_face == card.face;
-            // info!("try moving {:?} to {}: pile is empty but {} && {}", card, pile_id, ok_suit, ok_face);
             return ok_suit && ok_face;
         }
 
@@ -291,7 +278,6 @@ impl<'a> Game<'a> {
             FaceOrder::Desc => diff == 1,
             FaceOrder::Any => diff == 1 || diff == -1,
         };
-        // info!("{:?} -- diff {}, suit: {}, face: {}", top, diff, ok_suit, ok_face);
         ok_face && ok_suit
     }
 
@@ -308,7 +294,7 @@ impl<'a> Game<'a> {
     }
 
     pub fn first_fnd(&self) -> Option<usize> {
-        // Waste always exists and it is always the first
+        // Fnd always exists and it is always the first
         Some(0)
     }
 
@@ -487,7 +473,6 @@ impl<'a> Game<'a> {
         let first_fnd = self.first_fnd().unwrap();
         let fnd_len = self.fnd_count();
         for (idx, pile) in self.piles.iter().enumerate() {
-            // info!("COL {}: ordered {}", idx, self.ordered_count(idx));
             if idx >= first_fnd && idx < first_fnd + fnd_len {
                 continue;
             }
@@ -500,9 +485,6 @@ impl<'a> Game<'a> {
                 if (pile.conf.take_only || pile.conf.playable == Playable::Top) && cidx < l - 1 {
                     continue;
                 }
-                // if pile.conf.playable == Playable::Ordered {
-                //     info!("COL {}: {} = {} -- {}", idx, ordered, cidx, l);
-                // }
                 if pile.conf.playable == Playable::Ordered && l - cidx > ordered {
                     continue;
                 }
@@ -584,7 +566,6 @@ impl<'a> Game<'a> {
     }
 
     pub fn move_card(&mut self, from: Pos, to: Pos) -> Result<(), SolError> {
-        // info!("Moving from {:?} to {:?}", from , to);
         let from = if from.is_empty() {
             if self.selected.is_empty() {
                 return Err(SolError::NotSelected);
@@ -614,7 +595,6 @@ impl<'a> Game<'a> {
             info!("nowhere to put {:?}", src_card);
             return Err(SolError::NoDestination);
         }
-        // info!("Moving from(calculated) {:?} to {:?} [src: {:?}]", from , to, src_card);
         if !self.can_move(from, to.col) {
             info!("impossible");
             return Err(SolError::InvalidMove);
@@ -625,12 +605,9 @@ impl<'a> Game<'a> {
         let flippable = self.piles[from.col].conf.flip;
         let cfrom = &mut self.piles[from.col].cards;
         let l = cfrom.len();
-        // info!("moving cnt: {} of {}", cnt, l);
 
         let mut to_move: CardList = Vec::new();
-        // for idx in l - cnt..l {
         for item in cfrom.iter().skip(l - cnt) {
-            // to_move.push(cfrom[idx]);
             to_move.push(*item);
         }
         cfrom.truncate(l - cnt);
@@ -644,7 +621,6 @@ impl<'a> Game<'a> {
             }
         }
         for c in to_move.drain(..) {
-            // info!("moving {:?} to column {}", c, to.col);
             self.piles[to.col].cards.push(c);
         }
         Ok(())
@@ -721,22 +697,6 @@ impl<'a> Game<'a> {
         Ok(&self.piles[pp].cards)
     }
 
-    /*
-    pub fn pile_stats(&self, pos: usize) -> Result<PileStats, SolError> {
-        if pos >= self.pile_count() {
-            return Err(SolError::InvalidLocation);
-        }
-        let pp = self.first_pile().unwrap() + pos;
-        let l = self.piles[pp].cards.len();
-        let crd = if l == 0 {
-            Card::new_empty()
-        } else {
-            self.piles[pp].cards[l-1]
-        };
-        Ok(PileStats{top: crd, count: l})
-    }
-    */
-
     pub fn fnd(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.fnd_count() {
             return Err(SolError::InvalidLocation);
@@ -744,22 +704,6 @@ impl<'a> Game<'a> {
         let wp = self.first_fnd().unwrap() + pos;
         Ok(&self.piles[wp].cards)
     }
-
-    /*
-    pub fn fnd_stats(&self, pos: usize) -> Result<PileStats, SolError> {
-        if pos >= self.fnd_count() {
-            return Err(SolError::InvalidLocation);
-        }
-        let wp = self.first_fnd().unwrap() + pos;
-        let l = self.piles[wp].cards.len();
-        let crd = if l == 0 {
-            Card::new_empty()
-        } else {
-            self.piles[wp].cards[l-1]
-        };
-        Ok(PileStats{top: crd, count: l})
-    }
-    */
 
     pub fn temp(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.temp_count() {
@@ -769,22 +713,6 @@ impl<'a> Game<'a> {
         Ok(&self.piles[tp].cards)
     }
 
-    /*
-    pub fn temp_stats(&self, pos: usize) -> Result<PileStats, SolError> {
-        if pos >= self.temp_count() {
-            return Err(SolError::InvalidLocation);
-        }
-        let tp = self.first_temp().unwrap() + pos;
-        let l = self.piles[tp].cards.len();
-        let crd = if l == 0 {
-            Card::new_empty()
-        } else {
-            self.piles[tp].cards[l-1]
-        };
-        Ok(PileStats{top: crd, count: l})
-    }
-    */
-
     pub fn col(&self, pos: usize) -> Result<&CardList, SolError> {
         if pos >= self.col_count() {
             return Err(SolError::InvalidLocation);
@@ -792,22 +720,6 @@ impl<'a> Game<'a> {
         let cp = self.first_col().unwrap() + pos;
         Ok(&self.piles[cp].cards)
     }
-
-    /*
-    pub fn col_stats(&self, pos: usize) -> Result<PileStats, SolError> {
-        if pos >= self.col_count() {
-            return Err(SolError::InvalidLocation);
-        }
-        let cp = self.first_col().unwrap() + pos;
-        let l = self.piles[cp].cards.len();
-        let crd = if l == 0 {
-            Card::new_empty()
-        } else {
-            self.piles[cp].cards[l-1]
-        };
-        Ok(PileStats{top: crd, count: l})
-    }
-    */
 
     fn gen_list(&mut self, count: usize, up: usize) -> Result<CardList, SolError> {
         let mut col = Vec::new();

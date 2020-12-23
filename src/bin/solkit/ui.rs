@@ -8,7 +8,6 @@ use crate::gstate::GameState;
 use crate::primitive::{Border, Screen};
 use crate::theme::Theme;
 
-// const CARD_BACK: char = '✿';//'◊';//'/';//'░';
 const CARD_HEIGHT: u16 = 5;
 const CARD_WIDTH: u16 = 6;
 
@@ -33,8 +32,8 @@ enum DrawPile {
 
 fn suit_to_char(s: Suit) -> char {
     match s {
-        Suit::Spade => '♠', //'♤',//'♠',
-        Suit::Club => '♣',  //'♧',//'♣',
+        Suit::Spade => '♠',
+        Suit::Club => '♣',
         Suit::Diamond => '♦',
         Suit::Heart => '♥',
         _ => ' ',
@@ -360,12 +359,11 @@ pub(crate) fn draw_area(scr: &mut Screen, game: &Game, state: &GameState, theme:
     let temp_cnt = game.temp_count();
     let fnd_cnt = game.fnd_count();
     let col_cnt = game.col_count();
-    let marked = state.marked(); // TODO: highlight the entire column
+    let marked = state.marked();
     let hints = state.hints();
 
     let (idx, idy) = (1u16, 0u16);
 
-    // println!("pile...{}", pile_cnt);
     if pile_cnt != 0 {
         let (fg, bg) = theme.base_colors();
         scr.colors(fg, bg);
@@ -400,7 +398,6 @@ pub(crate) fn draw_area(scr: &mut Screen, game: &Game, state: &GameState, theme:
         scr.write_char('d', idx - 1, idy);
     }
 
-    // println!("temp...");
     for tidx in 0..temp_cnt {
         let (fg, bg) = theme.base_colors();
         scr.colors(fg, bg);
@@ -431,7 +428,6 @@ pub(crate) fn draw_area(scr: &mut Screen, game: &Game, state: &GameState, theme:
     } else {
         CARD_WIDTH + CARD_WIDTH / 2
     };
-    // println!("fnd...");
     for widx in 0..fnd_cnt {
         let (fg, bg) = theme.base_colors();
         scr.colors(fg, bg);
@@ -456,7 +452,6 @@ pub(crate) fn draw_area(scr: &mut Screen, game: &Game, state: &GameState, theme:
         }
     }
 
-    // println!("col...");
     let xshift = if temp_cnt == 0 { 0 } else { CARD_WIDTH + CARD_WIDTH / 2 };
     for cidx in 0..col_cnt {
         let (fg, bg) = theme.base_colors();

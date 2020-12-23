@@ -5,9 +5,6 @@ use crossterm::{cursor, queue, style, style::Color};
 
 use crate::buffer::Buffer;
 
-// TODO: long term ones
-//   - support double-width?
-
 const SINGLE_FRM: [char; 6] = ['│', '─', '┌', '┐', '└', '┘'];
 const DOUBLE_FRM: [char; 6] = ['║', '═', '╔', '╗', '╚', '╝'];
 const VLINE: usize = 0;
@@ -93,22 +90,6 @@ impl Screen {
         }
         self.fg = save_color;
     }
-
-    /*
-    pub(crate) fn write_string_vertical(&mut self, s: &str, col: u16, row: u16) {
-        if row >= self.buf.h || col >= self.buf.w {
-            return;
-        }
-        let mut dy = row;
-        for ch in s.chars() {
-            if dy >= self.buf.h {
-                break;
-            }
-            self.buf.write_char(ch, col, dy, self.fg, self.bg, self.kd);
-            dy+=1;
-        }
-    }
-    */
 
     pub(crate) fn write_char(&mut self, ch: char, col: u16, row: u16) {
         self.buf.write_char(ch, col, row, self.fg, self.bg, self.kd);

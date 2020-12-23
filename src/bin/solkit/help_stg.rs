@@ -9,7 +9,6 @@ use crate::theme::Theme;
 
 const DLG_WIDTH: u16 = 66;
 const DLG_HEIGHT: u16 = 22;
-// const ITEM_COUNT: usize = 20;
 const DLG_ITEMS: [&str; 20] = [
     "`Ctrl`+`q` - immediate exit",
     "`Left` or `h` - select the previous pile",
@@ -44,10 +43,6 @@ impl HelpStg {
 impl Strategy for HelpStg {
     fn process_event(&mut self, ctx: &mut Context, scr: &mut Screen, event: Event) -> Result<Transition, SolError> {
         match event {
-            // Event::Key(ev) => match ev.code {
-            //     KeyCode::Esc => return Ok(Transition::Pop),
-            //     _ => { /* nothing */ }
-            // },
             Event::Key(ev) => {
                 if let KeyCode::Esc = ev.code {
                     return Ok(Transition::Pop);
@@ -84,9 +79,7 @@ impl Strategy for HelpStg {
         scr.draw_frame(x, y, DLG_WIDTH, DLG_HEIGHT, Border::Double);
         scr.write_string(" Hotkeys ", x + 1, y);
 
-        // for idx in 0..ITEM_COUNT {
         for (idx, item) in DLG_ITEMS.iter().enumerate() {
-            // scr.write_string_highlight(DLG_ITEMS[idx], x + 1, y + 1 + idx as u16, wfg);
             scr.write_string_highlight(item, x + 1, y + 1 + idx as u16, wfg);
         }
         Ok(())

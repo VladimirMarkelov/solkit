@@ -96,7 +96,7 @@ impl Buffer {
         }
         let def_cell = Cell::default();
         let new_sz = usize::from(new_w) * usize::from(new_h);
-        let/* mut*/ nd: Vec<Cell> = vec![def_cell; new_sz];
+        let nd: Vec<Cell> = vec![def_cell; new_sz];
         let mut nb: Vec<Cell> = vec![def_cell; new_sz];
         let mut nw: Vec<u16> = vec![0; new_sz];
         for y in 0..new_h {
@@ -110,7 +110,6 @@ impl Buffer {
                     break;
                 }
                 let x = usize::from(x);
-                // nd[dy + x] = self.display[dy_old + x];
                 nb[dy + x] = self.back[dy_old + x];
                 nw[dy + x] = self.what[dy_old + x];
             }

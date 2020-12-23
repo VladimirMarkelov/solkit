@@ -74,7 +74,6 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
     ctx.name = user_conf.last_played.clone();
     ctx.custom = !cli.filename.is_empty();
 
-    // let mut stg: Box<dyn Strategy> = Box::new(PlayStg::new(&rules, &mut ctx).unwrap()); // TODO:
     let mut stg: Box<dyn Strategy> = Box::new(ChooseStg::new(&rules, &mut ctx).unwrap()); // TODO:
     let mut stages: Vec<Box<dyn Strategy>> = Vec::new();
 
@@ -131,7 +130,6 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                         Box::new(ChooseStg::new(&rules, &mut ctx).unwrap()) // TODO:
                     }
                     TransitionStage::HelpDialog => Box::new(HelpStg::new(&mut ctx).unwrap()),
-                    // _ => panic!("unimplemented"),
                 };
             }
             Transition::Replace(st) => {
@@ -161,7 +159,6 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                 };
             }
         }
-        // info!("current pos: {:?} of {}", game.selected_loc(), game.column_count());
     }
 }
 
@@ -172,22 +169,20 @@ fn main() -> Result<()> {
         let cb = ConfigBuilder::new().set_time_format("[%Y-%m-%d %H:%M:%S%.3f]".to_string()).build();
         CombinedLogger::init(vec![WriteLogger::new(LevelFilter::Info, cb, File::create("app.log").unwrap())]).unwrap();
     }
-    // info!("started");
 
     let mut stdout = stdout();
-    // cursor::Hide,
+    // TODO: cursor::Hide,
     execute!(stdout, terminal::EnterAlternateScreen)?;
     enable_raw_mode()?;
 
     let err = main_loop(&cli);
 
-    // cursor::Show,
+    // TODO: cursor::Show,
     queue!(stdout, style::ResetColor, terminal::LeaveAlternateScreen)?;
     stdout.flush()?;
 
     disable_raw_mode()?;
     if err.is_err() {
-        // eprintln!("{:?}", err);
         err
     } else {
         Ok(())

@@ -105,7 +105,6 @@ impl Theme for LightTheme {
         (Color::DarkRed, Color::DarkGreen)
     }
     fn card(&self) -> (Color, Color) {
-        // self.base_colors()
         (Color::Black, Color::White)
     }
     fn card_back(&self) -> (Color, Color) {

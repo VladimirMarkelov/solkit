@@ -83,13 +83,11 @@ impl Strategy for FinalStg {
         let (fg, bg) = theme.base_colors();
         scr.colors(fg, bg);
         scr.draw_frame(x, y, MENU_WIDTH, h, Border::Double);
-        // for idx in 0..ITEM_COUNT {
         for (idx, item) in MENU_ITEMS.iter().enumerate() {
             let (fg, bg) = if idx == self.selected { theme.menu_selected_item() } else { theme.base_colors() };
             scr.kind(idx as u16 + 1);
             scr.colors(fg, bg);
             scr.fill_rect(x + 1, y + 1 + idx as u16 * ITEM_HEIGHT, MENU_WIDTH - 2, ITEM_HEIGHT, ' ');
-            // let slen = MENU_ITEMS[idx].width();
             let slen = item.width();
             let mut shift = MENU_WIDTH / 2 - slen as u16 / 2;
             if slen % 2 == 1 {
