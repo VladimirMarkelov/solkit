@@ -132,9 +132,7 @@ impl Strategy for ChooseStg {
                 ctx.h = height;
                 self.update_size(width, height);
             }
-            _ => {
-                // TODO:
-            }
+            _ => {}
         }
         Ok(Transition::None)
     }

@@ -63,9 +63,7 @@ impl Strategy for HelpStg {
                 ctx.w = width;
                 ctx.h = height;
             }
-            _ => {
-                // TODO: mouse events
-            }
+            _ => {}
         }
         Ok(Transition::None)
     }

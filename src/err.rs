@@ -44,6 +44,8 @@ pub enum SolError {
     InvalidFaceOrder(String),
     #[error("Solitaire list is empty")]
     SolitaireListEmpty,
+    #[error("Solitaire {0} does not exist")]
+    SolitaireNotExist(String),
 
     #[error("Invalid configuration line: {0}")]
     InvalidConfLine(String),

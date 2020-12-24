@@ -19,7 +19,10 @@ pub(crate) struct PlayStg<'a> {
 
 impl<'a> PlayStg<'a> {
     pub(crate) fn new(rules: &'a HashMap<String, gconf::Conf>, ctx: &mut Context) -> Result<Self, SolError> {
-        let gc = rules.get(&ctx.name).unwrap(); // TODO:
+        let gc = match rules.get(&ctx.name) {
+            None => return Err(SolError::SolitaireNotExist(ctx.name.to_string())),
+            Some(rule) => rule,
+        };
         let game = Game::init(gc)?;
         Ok(PlayStg { game })
     }

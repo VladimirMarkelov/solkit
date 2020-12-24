@@ -237,43 +237,40 @@ pub(crate) fn draw_pile(
     draw_hints: DrawHints,
     theme: &dyn Theme,
 ) {
-    let (col, row) = (scr_pos.col, scr_pos.row); // TODO: use scr_pos directly
-    let (pile, id, conf) = (pile_props.pile, pile_props.id, pile_props.conf); // TODO: use pile_props directly
-    let (selected, current, hinted) = (draw_hints.selected, draw_hints.current, draw_hints.hinted); // TODO: use draw_hints directly
-    if pile.is_empty() {
-        let crd = Card::new(conf.start_suit, conf.start_face);
-        let mut state = if !conf.refill { CardState::FORBIDDEN } else { CardState::EMPTY };
-        if current.col == id {
+    if pile_props.pile.is_empty() {
+        let crd = Card::new(pile_props.conf.start_suit, pile_props.conf.start_face);
+        let mut state = if !pile_props.conf.refill { CardState::FORBIDDEN } else { CardState::EMPTY };
+        if draw_hints.current.col == pile_props.id {
             state |= CardState::CURRENT
         };
-        draw_card(scr, col, row, crd, (id as u16) * 100, state, theme);
+        draw_card(scr, scr_pos.col, scr_pos.row, crd, (pile_props.id as u16) * 100, state, theme);
         return;
     }
-    if !conf.selectable && !conf.all_up {
+    if !pile_props.conf.selectable && !pile_props.conf.all_up {
         // pile that always faces down
         let crd = Card::new_empty();
-        let state = if current.col == id { CardState::CURRENT } else { CardState::empty() };
-        draw_card(scr, col, row, crd, (id as u16) * 100, state, theme);
+        let state = if draw_hints.current.col == pile_props.id { CardState::CURRENT } else { CardState::empty() };
+        draw_card(scr, scr_pos.col, scr_pos.row, crd, (pile_props.id as u16) * 100, state, theme);
         return;
     }
-    if !conf.draw_all {
-        let crd = pile[pile.len() - 1];
-        let crd_pos = Pos { col: id, row: 0 };
-        let mut state = if crd_pos == current { CardState::CURRENT } else { CardState::empty() };
-        if crd_pos == selected {
+    if !pile_props.conf.draw_all {
+        let crd = pile_props.pile[pile_props.pile.len() - 1];
+        let crd_pos = Pos { col: pile_props.id, row: 0 };
+        let mut state = if crd_pos == draw_hints.current { CardState::CURRENT } else { CardState::empty() };
+        if crd_pos == draw_hints.selected {
             state |= CardState::SELECTED;
         }
-        if is_in_list(crd_pos, hinted) {
+        if is_in_list(crd_pos, draw_hints.hinted) {
             state |= CardState::HINT;
         }
-        draw_card(scr, col, row, crd, (id as u16) * 100, state, theme);
+        draw_card(scr, scr_pos.col, scr_pos.row, crd, (pile_props.id as u16) * 100, state, theme);
         return;
     }
 
-    let style = pile_draw_style(pile, max_height);
+    let style = pile_draw_style(pile_props.pile, max_height);
     let mut down = 0;
     let mut up = 0;
-    for c in pile {
+    for c in pile_props.pile {
         if c.is_up() {
             up += 1;
         } else {
@@ -286,22 +283,38 @@ pub(crate) fn draw_pile(
         DrawPile::SquashDown => (2, 1),
         DrawPile::Normal => (2, 2),
     };
-    let mut dy = row;
+    let mut dy = scr_pos.row;
     if down != 0 {
         if ddown == 0 {
             let crd = Card::new_empty();
-            let cid = (pile.len() - up) as u16;
-            draw_card(scr, col, row, crd, (id as u16) * 100 + cid, CardState::empty(), theme);
+            let cid = (pile_props.pile.len() - up) as u16;
+            draw_card(
+                scr,
+                scr_pos.col,
+                scr_pos.row,
+                crd,
+                (pile_props.id as u16) * 100 + cid,
+                CardState::empty(),
+                theme,
+            );
             if down > 1 {
                 let cnt = format!("+{}", down - 1);
-                scr.write_string(&cnt, col + 2, row);
+                scr.write_string(&cnt, scr_pos.col + 2, scr_pos.row);
             }
             dy += 1;
         } else {
-            let l = (pile.len() - 1) as u16;
+            let l = (pile_props.pile.len() - 1) as u16;
             let crd = Card::new_empty();
             for idx in 0..down {
-                draw_card(scr, col, dy, crd, (id as u16) * 100 + l - idx as u16, CardState::empty(), theme);
+                draw_card(
+                    scr,
+                    scr_pos.col,
+                    dy,
+                    crd,
+                    (pile_props.id as u16) * 100 + l - idx as u16,
+                    CardState::empty(),
+                    theme,
+                );
                 dy += ddown;
             }
         }
@@ -309,22 +322,22 @@ pub(crate) fn draw_pile(
     if up == 0 {
         return;
     }
-    let l = pile.len();
+    let l = pile_props.pile.len();
     for idx in 0..up {
-        let crd = pile[l + idx - up];
-        let crd_pos = Pos { col: id, row: up - idx - 1 };
-        let cid = (id * 100 + crd_pos.row) as u16;
+        let crd = pile_props.pile[l + idx - up];
+        let crd_pos = Pos { col: pile_props.id, row: up - idx - 1 };
+        let cid = (pile_props.id * 100 + crd_pos.row) as u16;
         let mut state = if dup == 1 { CardState::SQUASH } else { CardState::empty() };
-        if crd_pos == current {
+        if crd_pos == draw_hints.current {
             state |= CardState::CURRENT
         };
-        if crd_pos.col == selected.col && crd_pos.row <= selected.row {
+        if crd_pos.col == draw_hints.selected.col && crd_pos.row <= draw_hints.selected.row {
             state |= CardState::SELECTED;
         }
-        if is_in_list(crd_pos, hinted) {
+        if is_in_list(crd_pos, draw_hints.hinted) {
             state |= CardState::HINT;
         }
-        draw_card(scr, col, dy, crd, cid, state, theme);
+        draw_card(scr, scr_pos.col, dy, crd, cid, state, theme);
         dy += dup;
     }
 }
