@@ -153,12 +153,12 @@ impl Pos {
 }
 
 pub struct Game<'a> {
-    conf: &'a Conf, // selected solitaire rules
-    deck: Deck, // a deck
-    selected: Pos, // position of the cursor in play area
-    undo: UndoList, // list of game snapshots
+    conf: &'a Conf,   // selected solitaire rules
+    deck: Deck,       // a deck
+    selected: Pos,    // position of the cursor in play area
+    undo: UndoList,   // list of game snapshots
     piles: Vec<Pile>, // order: fnd, cols, temp, pile
-    redeals: i8, // redeals left
+    redeals: i8,      // redeals left
 }
 
 impl<'a> Game<'a> {
