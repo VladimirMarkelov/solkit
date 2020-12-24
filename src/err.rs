@@ -64,6 +64,9 @@ pub enum SolError {
     #[error("Reading rules from file failed")]
     FailedToOpenRules,
 
+    #[error("Invalid terminal size {0}x{1} (must be at least 60x25)")]
+    InvalidTermSize(u16, u16),
+
     #[error("{0}")]
     Unexpected(String), // for third-party errors
     #[error("{0} unsupported yet")]

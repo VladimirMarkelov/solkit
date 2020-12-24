@@ -280,17 +280,15 @@ impl<'a> Strategy for PlayStg<'a> {
                 }
             }
             Event::Resize(_, _) => {
-                let (width, height) = terminal::size().unwrap(); //TODO:
-                if width < 60 || height < 25 || width > 1500 || height > 500 {
-                    eprintln!(
-                        "Requires terminal width at least 60 and height at least 25 characters: {}x{}",
-                        width, height
-                    );
-                    return Ok(Transition::Exit);
+                let (width, height) = match terminal::size() {
+                    Err(e) => return Err(SolError::Unexpected(format!("{:?}", e))),
+                    Ok((ww, hh)) => (ww, hh),
+                };
+                if width < 60 || height < 25 {
+                    return Err(SolError::InvalidTermSize(width, height));
                 }
                 if let Err(e) = scr.resize(width, height) {
-                    eprintln!("Failed to resize: {:?}", e);
-                    return Ok(Transition::Exit);
+                    return Err(SolError::Unexpected(format!("Failed to resize: {:?}", e)));
                 }
                 ctx.w = width;
                 ctx.h = height;

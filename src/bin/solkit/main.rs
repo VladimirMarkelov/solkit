@@ -74,7 +74,7 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
     ctx.name = user_conf.last_played.clone();
     ctx.custom = !cli.filename.is_empty();
 
-    let mut stg: Box<dyn Strategy> = Box::new(ChooseStg::new(&rules, &mut ctx).unwrap()); // TODO:
+    let mut stg: Box<dyn Strategy> = Box::new(ChooseStg::new(&rules, &mut ctx)?);
     let mut stages: Vec<Box<dyn Strategy>> = Vec::new();
 
     let dark = theme::DarkTheme::new(true);
@@ -115,18 +115,18 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                 stages.push(stg);
                 scr_reset(&mut scr);
                 stg = match st {
-                    TransitionStage::EndDialog => Box::new(FinalStg::new(&mut ctx).unwrap()),
+                    TransitionStage::EndDialog => Box::new(FinalStg::new(&mut ctx)?),
                     TransitionStage::Play => {
                         ctx.state.clear_mark();
                         ctx.state.clear_hints();
-                        Box::new(PlayStg::new(&rules, &mut ctx).unwrap()) // TODO:
+                        Box::new(PlayStg::new(&rules, &mut ctx)?)
                     }
                     TransitionStage::Choose => {
                         ctx.state.clear_mark();
                         ctx.state.clear_hints();
-                        Box::new(ChooseStg::new(&rules, &mut ctx).unwrap()) // TODO:
+                        Box::new(ChooseStg::new(&rules, &mut ctx)?)
                     }
-                    TransitionStage::HelpDialog => Box::new(HelpStg::new(&mut ctx).unwrap()),
+                    TransitionStage::HelpDialog => Box::new(HelpStg::new(&mut ctx)?),
                 };
             }
             Transition::Replace(st) => {
@@ -141,16 +141,16 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                 ctx.won = false;
                 scr_reset(&mut scr);
                 stg = match st {
-                    TransitionStage::EndDialog => Box::new(FinalStg::new(&mut ctx).unwrap()),
+                    TransitionStage::EndDialog => Box::new(FinalStg::new(&mut ctx)?),
                     TransitionStage::Play => {
                         ctx.state.clear_mark();
                         ctx.state.clear_hints();
-                        Box::new(PlayStg::new(&rules, &mut ctx).unwrap()) // TODO:
+                        Box::new(PlayStg::new(&rules, &mut ctx)?)
                     }
                     TransitionStage::Choose => {
                         ctx.state.clear_mark();
                         ctx.state.clear_hints();
-                        Box::new(ChooseStg::new(&rules, &mut ctx).unwrap()) // TODO:
+                        Box::new(ChooseStg::new(&rules, &mut ctx)?)
                     }
                     _ => panic!("unimplemented"),
                 };
