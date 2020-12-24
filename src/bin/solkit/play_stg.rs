@@ -56,6 +56,34 @@ impl<'a> PlayStg<'a> {
     }
 }
 
+fn on_enter(pstg: &mut PlayStg, ctx: &mut Context, curr: Pos) {
+    pstg.game.take_snapshot();
+    ctx.state.clear_hints();
+    if pstg.game.is_deck_clicked(Some(curr)) {
+        ctx.moved = true;
+        ctx.state.clear_mark();
+        pstg.game.deal();
+    }
+    let sel = ctx.state.marked();
+    if sel.is_empty() || sel == curr {
+        if pstg.game.move_card(curr, Pos::new()).is_ok() {
+            ctx.moved = true;
+            pstg.game.select(Pos { col: pstg.game.selected_loc().col, row: 0 });
+            ctx.state.clear_mark();
+        }
+    } else if pstg.game.move_card(sel, curr).is_ok() {
+        ctx.moved = true;
+        pstg.game.select(Pos { col: pstg.game.selected_loc().col, row: 0 });
+        ctx.state.clear_mark();
+    }
+    if pstg.game.is_completed() {
+        pstg.game.clear_undo();
+        ctx.won = true;
+    } else {
+        pstg.game.squash_snapshots();
+    }
+}
+
 impl<'a> Strategy for PlayStg<'a> {
     fn process_event(&mut self, ctx: &mut Context, scr: &mut Screen, event: Event) -> Result<Transition, SolError> {
         match event {
@@ -169,32 +197,8 @@ impl<'a> Strategy for PlayStg<'a> {
                 }
 
                 KeyCode::Enter | KeyCode::Char('m') => {
-                    self.game.take_snapshot();
-                    ctx.state.clear_hints();
-                    if self.game.is_deck_clicked(Some(self.game.selected_loc())) {
-                        ctx.moved = true;
-                        ctx.state.clear_mark();
-                        self.game.deal();
-                    }
-                    let curr = self.game.selected_loc();
-                    let sel = ctx.state.marked();
-                    if sel.is_empty() || sel == curr {
-                        if self.game.move_card(curr, Pos::new()).is_ok() {
-                            ctx.moved = true;
-                            self.game.select(Pos { col: self.game.selected_loc().col, row: 0 });
-                            ctx.state.clear_mark();
-                        }
-                    } else if self.game.move_card(sel, curr).is_ok() {
-                        ctx.moved = true;
-                        self.game.select(Pos { col: self.game.selected_loc().col, row: 0 });
-                        ctx.state.clear_mark();
-                    }
-                    if self.game.is_completed() {
-                        self.game.clear_undo();
-                        ctx.won = true;
-                    } else {
-                        self.game.squash_snapshots();
-                    }
+                    let pos = self.game.selected_loc();
+                    on_enter(self, ctx, pos);
                 }
 
                 KeyCode::F(5) | KeyCode::Char('R') => {
@@ -242,7 +246,6 @@ impl<'a> Strategy for PlayStg<'a> {
                             }
                         }
                         MouseButton::Right => {
-                            // TODO: merge with ENTER
                             if ctx.won {
                                 return Ok(Transition::None);
                             }
@@ -251,32 +254,7 @@ impl<'a> Strategy for PlayStg<'a> {
                                 return Ok(Transition::None);
                             }
                             let p = Pos { col: (w / 100) as usize, row: (w % 100) as usize };
-                            self.game.take_snapshot();
-                            ctx.state.clear_hints();
-                            if self.game.is_deck_clicked(Some(p)) {
-                                ctx.moved = true;
-                                ctx.state.clear_mark();
-                                self.game.deal();
-                            }
-                            let curr = p;
-                            let sel = ctx.state.marked();
-                            if sel.is_empty() || sel == curr {
-                                if self.game.move_card(curr, Pos::new()).is_ok() {
-                                    ctx.moved = true;
-                                    self.game.select(Pos { col: p.col, row: 0 });
-                                    ctx.state.clear_mark();
-                                }
-                            } else if self.game.move_card(sel, curr).is_ok() {
-                                ctx.moved = true;
-                                self.game.select(Pos { col: p.col, row: 0 });
-                                ctx.state.clear_mark();
-                            }
-                            if self.game.is_completed() {
-                                self.game.clear_undo();
-                                ctx.won = true;
-                            } else {
-                                self.game.squash_snapshots();
-                            }
+                            on_enter(self, ctx, p);
                         }
                         _ => {}
                     }
