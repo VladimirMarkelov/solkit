@@ -39,7 +39,7 @@ impl UserConf {
     }
 
     pub(crate) fn save(&self) {
-        let tml = toml::to_string(&self).unwrap(); // TODO:
+        let tml = toml::to_string(&self).expect("failed to serialize user configuration");
         let path = user_conf_path();
         if let Err(e) = write(path, tml) {
             eprintln!("Failed to save user configuration: {:?}", e);

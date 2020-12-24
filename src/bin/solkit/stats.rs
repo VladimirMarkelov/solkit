@@ -67,7 +67,7 @@ impl Stats {
     }
 
     pub(crate) fn save(&self) {
-        let tml = toml::to_string(&self).unwrap(); // TODO:
+        let tml = toml::to_string(&self).expect("failed to serialize statistics");
         let path = stats_path();
         if let Err(e) = write(path, tml) {
             eprintln!("Failed to save statistics: {:?}", e);

@@ -223,7 +223,7 @@ impl<'a> Game<'a> {
 
     // the number of top cards of a column that are already in correct order
     pub fn ordered_count(&self, pile_id: usize) -> usize {
-        let col_start = self.first_col().unwrap(); // TODO:
+        let col_start = self.first_col().expect("at least one column must exist");
         let col_cnt = self.col_count();
         if pile_id < col_start || pile_id >= col_start + col_cnt {
             return 0;
@@ -549,10 +549,10 @@ impl<'a> Game<'a> {
     // rollback the game to the previous snapshot if exists. The snapshot is deleted, so redo is
     // unavailable.
     pub fn undo(&mut self) {
-        if self.undo.is_empty() {
-            return;
-        }
-        let mut last = self.undo.pop().unwrap(); // TODO
+        let mut last = match self.undo.pop() {
+            None => return,
+            Some(u) => u,
+        };
         self.redeals = last.redeals;
         self.selected = last.selected;
         for (idx, pile) in last.piles.drain(..).enumerate() {

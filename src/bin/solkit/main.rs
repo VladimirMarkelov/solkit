@@ -93,12 +93,9 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
         let trans = stg.process_event(&mut ctx, &mut scr, ev)?;
         match trans {
             Transition::None => {}
-            Transition::Pop => {
-                if stages.is_empty() {
-                    return Ok(());
-                }
-                scr_reset(&mut scr);
-                stg = stages.pop().unwrap(); //TODO:
+            Transition::Pop => match stages.pop() {
+                None => return Ok(()),
+                Some(_) => scr_reset(&mut scr),
             }
             Transition::Exit => {
                 if ctx.moved {
