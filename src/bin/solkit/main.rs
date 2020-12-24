@@ -28,7 +28,7 @@ use crossterm::event::{read, EnableMouseCapture};
 use crossterm::terminal::{self, disable_raw_mode, enable_raw_mode, ClearType};
 use crossterm::tty::IsTty;
 use crossterm::{
-    execute, queue,
+    cursor, execute, queue,
     style::{self, Color},
 };
 use simplelog::*;
@@ -172,10 +172,11 @@ fn main() -> Result<()> {
     execute!(stdout, terminal::EnterAlternateScreen)?;
     enable_raw_mode()?;
 
+    execute!(stdout, cursor::Hide)?;
     let err = main_loop(&cli);
 
     // TODO: cursor::Show,
-    queue!(stdout, style::ResetColor, terminal::LeaveAlternateScreen)?;
+    queue!(stdout, cursor::Show, style::ResetColor, terminal::LeaveAlternateScreen)?;
     stdout.flush()?;
 
     disable_raw_mode()?;
