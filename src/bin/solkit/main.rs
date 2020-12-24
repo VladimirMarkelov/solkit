@@ -168,14 +168,12 @@ fn main() -> Result<()> {
     }
 
     let mut stdout = stdout();
-    // TODO: cursor::Hide,
     execute!(stdout, terminal::EnterAlternateScreen)?;
     enable_raw_mode()?;
 
     execute!(stdout, cursor::Hide)?;
     let err = main_loop(&cli);
 
-    // TODO: cursor::Show,
     queue!(stdout, cursor::Show, style::ResetColor, terminal::LeaveAlternateScreen)?;
     stdout.flush()?;
 
