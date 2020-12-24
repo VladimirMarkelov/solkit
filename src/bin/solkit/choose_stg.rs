@@ -52,6 +52,16 @@ impl ChooseStg {
     }
 }
 
+fn shift_in(s: &str, w: u16) -> u16 {
+    let md = s.len() as u16 / 2;
+    let wmd = w / 2;
+    if wmd < md {
+        0
+    } else {
+        wmd - md
+    }
+}
+
 impl Strategy for ChooseStg {
     fn process_event(&mut self, ctx: &mut Context, scr: &mut Screen, event: Event) -> Result<Transition, SolError> {
         let l = self.sols.len() as u16;
@@ -148,26 +158,23 @@ impl Strategy for ChooseStg {
         scr.draw_frame(x, y, self.width + 2, self.height + 2, Border::Double);
         let name_w = self.width - 2 * COUNT_W - PERCENT_W - 3;
 
-        // draw header: TODO: better
-        const NAME_TITLE: &str = "Solitaire";
-        let dx = name_w / 2 - (NAME_TITLE.len() - NAME_TITLE.len() / 2) as u16;
-        scr.write_string(NAME_TITLE, x + 1 + dx, y + 1);
-        const PLAYED_TITLE: &str = "Played";
-        let dx = name_w + 2;
-        scr.write_string(PLAYED_TITLE, x + 1 + dx, y + 1);
-        const WON_TITLE: &str = "Won";
-        let dx = name_w + COUNT_W + 4;
-        scr.write_string(WON_TITLE, x + 1 + dx, y + 1);
-        const PERCENT_TITLE: &str = "%";
-        let dx = name_w + COUNT_W * 2 + 5;
-        scr.write_string(PERCENT_TITLE, x + 1 + dx + 1, y + 1);
-        scr.write_char('│', x + 1 + name_w, y + 1);
-        scr.write_char('│', x + 1 + name_w + COUNT_W + 1, y + 1);
-        scr.write_char('│', x + 1 + name_w + COUNT_W * 2 + 2, y + 1);
-        scr.write_hline(x + 1, y + 2, self.width, Border::Single);
-        scr.write_char('┴', x + 1 + name_w, y + 2);
-        scr.write_char('┴', x + 1 + name_w + COUNT_W + 1, y + 2);
-        scr.write_char('┴', x + 1 + name_w + COUNT_W * 2 + 2, y + 2);
+        let (xpos, ypos) = (x + 1, y + 1);
+        let titles: Vec<&'static str> = vec!["Solitaire", "Played", "Won", "%"];
+        let widths: Vec<u16> = vec![name_w, COUNT_W, COUNT_W, PERCENT_W];
+        let mut shift = 0u16;
+        for (title, width) in titles.iter().zip(widths.iter()) {
+            let dx = shift_in(title, *width) + shift;
+            scr.write_string(title, xpos + dx, ypos);
+            shift += width + 1;
+        }
+
+        scr.write_char('│', xpos + name_w, ypos);
+        scr.write_char('│', xpos + name_w + COUNT_W + 1, ypos);
+        scr.write_char('│', xpos + name_w + COUNT_W * 2 + 2, ypos);
+        scr.write_hline(xpos, ypos + 1, self.width, Border::Single);
+        scr.write_char('┴', xpos + name_w, ypos + 1);
+        scr.write_char('┴', xpos + name_w + COUNT_W + 1, ypos + 1);
+        scr.write_char('┴', xpos + name_w + COUNT_W * 2 + 2, ypos + 1);
 
         for idx in 0..self.height - 2 {
             if idx >= self.top + self.sols.len() as u16 {
