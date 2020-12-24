@@ -84,6 +84,14 @@ fn on_enter(pstg: &mut PlayStg, ctx: &mut Context, curr: Pos) {
     }
 }
 
+fn on_deal(pstg: &mut PlayStg, ctx: &mut Context) {
+    ctx.moved = true;
+    pstg.game.take_snapshot();
+    ctx.state.clear_mark();
+    pstg.game.deal();
+    pstg.game.squash_snapshots();
+}
+
 impl<'a> Strategy for PlayStg<'a> {
     fn process_event(&mut self, ctx: &mut Context, scr: &mut Screen, event: Event) -> Result<Transition, SolError> {
         match event {
@@ -188,11 +196,7 @@ impl<'a> Strategy for PlayStg<'a> {
                     if self.game.is_selectable(None) {
                         ctx.state.mark(self.game.selected_loc());
                     } else if self.game.is_deck_clicked(None) {
-                        ctx.moved = true;
-                        self.game.take_snapshot();
-                        ctx.state.clear_mark();
-                        self.game.deal();
-                        self.game.squash_snapshots();
+                        on_deal(self, ctx);
                     }
                 }
 
@@ -238,11 +242,7 @@ impl<'a> Strategy for PlayStg<'a> {
                                 self.game.select(p);
                                 ctx.state.mark(p);
                             } else if self.game.is_deck_clicked(Some(p)) {
-                                ctx.moved = true;
-                                self.game.take_snapshot();
-                                ctx.state.clear_mark();
-                                self.game.deal();
-                                self.game.squash_snapshots();
+                                on_deal(self, ctx);
                             }
                         }
                         MouseButton::Right => {
