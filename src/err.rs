@@ -64,6 +64,8 @@ pub enum SolError {
     #[error("Reading rules from file failed")]
     FailedToOpenRules,
 
+    #[error("{0}")]
+    Unexpected(String), // for third-party errors
     #[error("{0} unsupported yet")]
     Unsupported(String),
 }

@@ -96,7 +96,7 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
             Transition::Pop => match stages.pop() {
                 None => return Ok(()),
                 Some(_) => scr_reset(&mut scr),
-            }
+            },
             Transition::Exit => {
                 if ctx.moved {
                     ctx.stats.update_stat(&ctx.name, ctx.won);
