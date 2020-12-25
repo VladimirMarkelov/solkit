@@ -1,3 +1,9 @@
+solkit (0.4.7) unstable; urgency=medium
+
+  * Bump packages
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Fri, 25 Dec 2020 13:49:55 -0800
+
 solkit (0.4.6) unstable; urgency=medium
 
   * Hide and restore terminal cursor
