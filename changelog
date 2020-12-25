@@ -1,3 +1,11 @@
+solkit (0.4.6) unstable; urgency=medium
+
+  * Hide and restore terminal cursor
+  * Fix a bug with card face encoding
+  * Code cleanup
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Thu, 24 Dec 2020 16:52:49 -0800
+
 solkit (0.4.5) unstable; urgency=medium
 
   * Logging is disabled by default
