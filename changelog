@@ -1,9 +1,11 @@
-solkit (0.5.0) unstable; urgency=medium
+solkit (0.4.8) unstable; urgency=medium
 
   * Hotkey 'Shift+s' to show current card valid destinations
-  * Hotjey 's' did not show hints if any card was marked
+  * Hotkey 's' did not show hints if any card was marked
+  * Fixed bug: Escape in menu dialogs did not work as expected. Instead of
+    returning to the previous stage, it exited the application
 
- -- Vladimir Markelov <vmatroskin@gmail.com>  Fri, 01 Jan 2021 18:19:18 -0800
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Fri, 01 Jan 2021 18:46:23 -0800
 
 solkit (0.4.7) unstable; urgency=medium
 

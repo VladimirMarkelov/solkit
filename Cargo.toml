@@ -1,6 +1,6 @@
 [package]
 name = "solkit"
-version = "0.4.7"
+version = "0.4.8"
 authors = ["Vladimir Markelov <vmatroskin@gmail.com>"]
 edition = "2018"
 license = "Apache-2.0 OR MIT"

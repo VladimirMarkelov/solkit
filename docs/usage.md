@@ -118,6 +118,9 @@ When playing a solitaire:
 - `F5` and `Shift+r` to abandon the current solitaire and start a new one from scratch. If you have done at least one move, the number of played games increases, lowering your `win percentage`
 - `u` to undo the last move
 - `s` to highlight(to show hints) all the cards that can be moved to another pile. Note: in case of a solitaire uses `free cells` and any of them is empty, it highlights all bottom cards in all columns, making it a bit useless
+- `Shift+s` to highlight(to show hints) all the cards where the selected card can be moved.
+
+Note: cards highlighted with `s` and `Shift+s` are mutually exclusive. In other words, e.g., after pressing `Shift+s` all previously highlighted cards are cleared and new ones are highlighted.
 
 ### Mouse
 
