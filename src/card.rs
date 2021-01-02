@@ -163,7 +163,7 @@ pub struct Deck {
 
 impl Deck {
     pub fn new(count: u8) -> Result<Deck, SolError> {
-        if count < 1 || count > 2 {
+        if !(1..=2).contains(&count) {
             return Err(SolError::InvalidDeckNumber(count));
         }
         let mut dck: Deck = Deck { cards: Vec::new(), idx: 0 };

@@ -213,9 +213,11 @@ impl<'a> Strategy for PlayStg<'a> {
                 }
 
                 KeyCode::Char('s') => {
-                    if ctx.state.marked().is_empty() {
-                        ctx.state.hint(&self.game.avail_list());
-                    }
+                    ctx.state.hint(&self.game.avail_list());
+                }
+
+                KeyCode::Char('S') => {
+                    ctx.state.hint(&self.game.dest_list_card(self.game.selected_loc()));
                 }
 
                 KeyCode::Char('u') => {

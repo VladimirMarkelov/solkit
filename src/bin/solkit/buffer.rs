@@ -66,10 +66,10 @@ pub struct Buffer {
 
 impl Buffer {
     pub fn new(w: u16, h: u16) -> Result<Self> {
-        if w < 60 || w > 1500 {
+        if !(60..1500).contains(&w) {
             return Err(anyhow!("Width must be between 60 and 1500"));
         }
-        if h < 20 || h > 500 {
+        if !(20..500).contains(&h) {
             return Err(anyhow!("Height must be between 20 and 500"));
         }
         let sz = usize::from(w) * usize::from(h);
@@ -93,10 +93,10 @@ impl Buffer {
 
     // resize screen and back buffers. Old data is preserved if possible (when the area grows)
     pub fn resize(&mut self, new_w: u16, new_h: u16) -> Result<()> {
-        if new_w < 60 || new_w > 1500 {
+        if !(60..1500).contains(&new_w) {
             return Err(anyhow!("Width must be between 60 and 1500"));
         }
-        if new_h < 20 || new_h > 500 {
+        if !(20..500).contains(&new_h) {
             return Err(anyhow!("Height must be between 20 and 500"));
         }
         let def_cell = Cell::default();

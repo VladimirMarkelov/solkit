@@ -1,3 +1,10 @@
+solkit (0.5.0) unstable; urgency=medium
+
+  * Hotkey 'Shift+s' to show current card valid destinations
+  * Hotjey 's' did not show hints if any card was marked
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Fri, 01 Jan 2021 18:19:18 -0800
+
 solkit (0.4.7) unstable; urgency=medium
 
   * Bump packages
