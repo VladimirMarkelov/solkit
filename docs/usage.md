@@ -1,6 +1,7 @@
 # Table of Contents
 
 - [Layout and terminology](#layout-and-terminology)
+    - [Information panel](#information-panel)
 - [Command line options](#command-line-options)
     - [Arguments](#arguments)
     - [Custom rules](#custom-rules)
@@ -30,6 +31,36 @@ Other terms:
 - `Redeal` is moving all cards from `waste` to `deck`
 
 A solitaire is automatically marked as a `win` if only foundation piles contain cards.
+
+### Information panel
+
+Information panel comprises three sections: solitaire statistics, the current pile properties, and the selected and marked cards.
+
+Solitaire statistics include how many time the solitaire has been played so far, the number of solved deals, and winning percentage.
+
+The current pile properties explains in what order and which type of cards can be put on the current pile, and what cards are playable, i.e. which ones can be moved to another column. Face order of cards in the pile is one of:
+
+- `A 2 3 4` - cards must be in ascending order
+- `4 3 2 A` - cards must be in descending order
+- `A 2 3 2` - cards must be either in ascending or descending order (alternate order)
+- `-` - the pile does not have any order restrictions
+
+Note that ascending and descending orders require the next card is higher or lower only by one point.
+So, in case of ascending order, you can put `Q` on top of `J` but you cannot put `K` on `J`.
+Another note: in all orders the values of card faces are looped, i.e., you can put `A` on top of `K` in ascending order, and `K` on top of `A` in descending order.
+
+Suit order is one of:
+
+- `♥ ♥ ♥ ♥` - put a card only of the same suit
+- `♥ ♦ ♦ ♥` - put a card of the same color
+- `♥ ♠ ♦ ♣` - put a card of an alternate color
+- `-` - either no restriction(put a card of any suit), or is not applicable(e.g., deck or free cell pile)
+
+The last section is selected and marked cards.
+Most of the time, this information is redundant.
+But in case of a pile grows too high and its top card gets invisible, this information may get handy.
+`Marked card` is a card marked with `Space`. `Selected card` is a card under cursor.
+If a card under cursor is a marked one, `[MARKED]` is displayed as well to indicate that selected and marked cards are the same one.
 
 ## Command line options
 

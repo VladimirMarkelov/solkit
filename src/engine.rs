@@ -662,7 +662,7 @@ impl<'a> Game<'a> {
     }
 
     // return a card at a given position or empty card if position is invalid.
-    fn card_at(&self, loc: Pos) -> Card {
+    pub fn card_at(&self, loc: Pos) -> Card {
         if loc.is_empty() || loc.col >= self.piles.len() {
             return Card::new_empty();
         }
@@ -730,6 +730,14 @@ impl<'a> Game<'a> {
             return Err(SolError::InvalidLocation);
         }
         Ok(&self.piles[pos].conf)
+    }
+
+    // return the number of cards in a pile
+    pub fn slot_cards_left(&self, pos: usize) -> Result<usize, SolError> {
+        if pos >= self.piles.len() {
+            return Err(SolError::InvalidLocation);
+        }
+        Ok(self.piles[pos].cards.len())
     }
 
     // return cards in a deck(0) or in a waste(1)

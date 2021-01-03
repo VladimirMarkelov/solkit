@@ -30,7 +30,7 @@ enum DrawPile {
     HideDown,
 }
 
-fn suit_to_char(s: Suit) -> char {
+pub(crate) fn suit_to_char(s: Suit) -> char {
     match s {
         Suit::Spade => '♠',
         Suit::Club => '♣',
@@ -40,7 +40,7 @@ fn suit_to_char(s: Suit) -> char {
     }
 }
 
-fn face_to_str(f: Face) -> &'static str {
+pub(crate) fn face_to_str(f: Face) -> &'static str {
     match f {
         Face::N2 => "2",
         Face::N3 => "3",
@@ -145,6 +145,14 @@ fn draw_empty_card(scr: &mut Screen, card: Card, col: u16, row: u16, border: Bor
         let sch = suit_to_char(card.suit);
         scr.write_char(sch, col + 4, row + 2);
     }
+}
+
+pub(crate) fn draw_suit(suit: Suit, scr: &mut Screen, col: u16, row: u16, theme: &dyn Theme) {
+    let (fg, bg) = theme.base_colors();
+    scr.colors(theme.suit(suit), bg);
+    let sch = suit_to_char(suit);
+    scr.write_char(sch, col, row);
+    scr.colors(fg, bg);
 }
 
 pub(crate) fn draw_card(
