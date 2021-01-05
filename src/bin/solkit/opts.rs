@@ -10,6 +10,7 @@ pub(crate) struct CliOpts {
     pub(crate) dark: bool,
     pub(crate) filename: String,
     pub(crate) logging: bool,
+    pub(crate) four_color: bool,
 }
 
 fn print_usage(program: &str, opts: &Options) {
@@ -20,11 +21,12 @@ fn print_usage(program: &str, opts: &Options) {
 pub(crate) fn parse_args() -> CliOpts {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
-    let mut cli = CliOpts { dark: true, filename: String::new(), logging: false };
+    let mut cli = CliOpts { dark: true, filename: String::new(), logging: false, four_color: false };
 
     let mut opts = Options::new();
     opts.optflag("h", "help", "Show this help");
     opts.optopt("t", "theme", "Choose UI theme", "dark | classic");
+    opts.optflag("4", "four-color", "Use distinct color for each suit");
     opts.optflag("v", "version", "Show application version");
     opts.optflag("", "log", "Enable logging");
 
@@ -48,6 +50,7 @@ pub(crate) fn parse_args() -> CliOpts {
         exit(0);
     }
     cli.logging = matches.opt_present("log");
+    cli.four_color = matches.opt_present("four-color");
 
     if let Some(val) = matches.opt_str("t") {
         cli.dark = match val.to_lowercase().as_str() {

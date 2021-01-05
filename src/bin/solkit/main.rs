@@ -77,8 +77,8 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
     let mut stg: Box<dyn Strategy> = Box::new(ChooseStg::new(&rules, &mut ctx)?);
     let mut stages: Vec<Box<dyn Strategy>> = Vec::new();
 
-    let dark = theme::DarkTheme::new(true);
-    let light = theme::LightTheme::new(true);
+    let dark = theme::DarkTheme::new(!cli.four_color);
+    let light = theme::LightTheme::new(!cli.four_color);
     let thm: &dyn theme::Theme = if cli.dark { &dark } else { &light };
     let (fg, bg) = thm.base_colors();
     scr.colors(fg, bg);
