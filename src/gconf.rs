@@ -99,9 +99,8 @@ pub struct Conf {
     pub chance: Option<u16>, // chance of winning 1 of N (if known)
     pub name: String,        // solitaire unique name
 
-    pub deck_count: u8,       // number of decks (1 or 2)
-    pub playable: Playable,   // what cards in a column are playable
-    pub temp_take_only: bool, // a user can only take cards from temp or put as well
+    pub deck_count: u8,     // number of decks (1 or 2)
+    pub playable: Playable, // what cards in a column are playable
 
     pub pile: Option<PileConf>, // deck and waste configuration
     pub fnd: Vec<FndSlot>,      // foundation configuration
@@ -121,7 +120,6 @@ impl Default for Conf {
             chance: None,
             deck_count: 1,
             playable: Playable::Top,
-            temp_take_only: false,
             pile: None,
             fnd: Vec::new(),
             temp: None,
