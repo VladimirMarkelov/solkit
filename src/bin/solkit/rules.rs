@@ -293,5 +293,33 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
     };
     rules.insert(conf.name.clone(), conf);
 
+    let conf = Conf {
+        name: "Aunt Mary".to_string(),
+        chance: None,
+        deck_count: 1,
+        playable: Playable::Any,
+        temp_take_only: false,
+        pile: Some(PileConf { deal_by: 1, redeals: 0, pile_to_cols: false }),
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 6, up: 6, take_only: false },
+            ColConf { count: 6, up: 5, take_only: false },
+            ColConf { count: 6, up: 4, take_only: false },
+            ColConf { count: 6, up: 3, take_only: false },
+            ColConf { count: 6, up: 2, take_only: false },
+            ColConf { count: 6, up: 1, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::AlternateColor,
+        col_refill: Face::Any,
+    };
+    rules.insert(conf.name.clone(), conf);
+
     Ok(rules)
 }
