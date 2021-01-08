@@ -834,11 +834,23 @@ impl<'a> Game<'a> {
         }
     }
 
+    fn update_fnd(&mut self, rand_card: &Card) {
+        let idx = self.first_fnd().unwrap();
+        let cnt = self.fnd_count();
+        for i in idx..idx + cnt {
+            if self.piles[i].conf.start_face != Face::Column {
+                continue;
+            }
+            self.piles[i].conf.start_face = rand_card.face;
+        }
+    }
+
     // deal cards to all piles at the solitaire initialization
     pub fn init_cols(&mut self) -> Result<(), SolError> {
         self.init_piles();
         let idx = self.first_col().unwrap();
         let ccols = self.conf.cols.clone();
+        let mut first_col_card = Card::new_empty();
         for (n, cfg) in ccols.iter().enumerate() {
             let cnt = cfg.count;
             let up = if cfg.up == 0 && cnt != 0 {
@@ -849,8 +861,13 @@ impl<'a> Game<'a> {
                 cfg.up
             };
             let col = self.gen_list(usize::from(cnt), usize::from(up))?;
+            let card_cnt = col.len();
             self.piles[idx + n].cards = col;
+            if card_cnt != 0 && first_col_card.is_empty() {
+                first_col_card = self.piles[idx + n].cards[card_cnt - 1];
+            }
         }
+        self.update_fnd(&first_col_card);
 
         if let Some(tc) = self.conf.temp {
             let idx = self.first_temp().unwrap();

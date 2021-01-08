@@ -28,6 +28,7 @@ pub enum Face {
     Empty,
     Any,
     Unavail,
+    Column,
 }
 
 fn i8_to_suit(s: i8) -> Suit {
@@ -93,6 +94,7 @@ pub fn str_to_face(f: &str) -> Result<Face, SolError> {
         "a" => Ok(Face::A),
         "any" => Ok(Face::Any),
         "empty" => Ok(Face::Empty),
+        "first" | "column" | "random" => Ok(Face::Column),
         "unavail" | "unavailable" | "none" => Ok(Face::Unavail),
         _ => Err(SolError::InvalidFace(f.to_string())),
     }

@@ -1,3 +1,10 @@
+solkit (0.5.0) unstable; urgency=medium
+
+  * A lot of new solitaires ---- describe
+  * New rule for first foundation card: random|column
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  ///
+
 solkit (0.4.8) unstable; urgency=medium
 
   * Hotkey 'Shift+s' to show current card valid destinations
