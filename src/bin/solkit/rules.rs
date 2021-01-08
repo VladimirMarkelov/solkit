@@ -350,7 +350,7 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
     let conf = Conf {
         name: "Blind alleys".to_string(),
         chance: None,
-        deck_count: 2,
+        deck_count: 1,
         playable: Playable::Any,
         pile: Some(PileConf { deal_by: 1, redeals: 1, pile_to_cols: false }),
         fnd: vec![
@@ -370,6 +370,35 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
         ],
         col_forder: FaceOrder::Desc,
         col_sorder: SuitOrder::AlternateColor,
+        col_refill: Face::Any,
+    };
+    rules.insert(conf.name.clone(), conf);
+
+    let conf = Conf {
+        name: "Brigade".to_string(),
+        chance: None,
+        deck_count: 1,
+        playable: Playable::Top,
+        pile: None,
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 13, up: 13, take_only: true },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::SameColor,
         col_refill: Face::Any,
     };
     rules.insert(conf.name.clone(), conf);
