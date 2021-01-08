@@ -464,5 +464,37 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
     };
     rules.insert(conf.name.clone(), conf);
 
+    let conf = Conf {
+        name: "Double canfield".to_string(),
+        chance: None,
+        deck_count: 2,
+        playable: Playable::Any,
+        pile: Some(PileConf { deal_by: 3, redeals: -1, pile_to_cols: false }),
+        fnd: vec![
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::Column, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 40, up: 40, take_only: true },
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 1, up: 1, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::AlternateColor,
+        col_refill: Face::Any,
+    };
+    rules.insert(conf.name.clone(), conf);
+
     Ok(rules)
 }
