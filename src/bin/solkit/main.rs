@@ -98,11 +98,13 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                 Some(s) => {
                     scr_reset(&mut scr);
                     stg = s;
+                    stg.on_activate(&mut ctx);
                 }
             },
             Transition::Exit => {
+                stg.on_deactivate(&mut ctx);
                 if ctx.moved {
-                    ctx.stats.update_stat(&ctx.name, ctx.won);
+                    ctx.stats.update_stat(&ctx.name, ctx.won, ctx.elapsed);
                     if !ctx.custom {
                         ctx.stats.save();
                     }
@@ -115,6 +117,7 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                 return Ok(());
             }
             Transition::Push(st) => {
+                stg.on_deactivate(&mut ctx);
                 stages.push(stg);
                 scr_reset(&mut scr);
                 stg = match st {
@@ -131,11 +134,13 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                     }
                     TransitionStage::HelpDialog => Box::new(HelpStg::new(&mut ctx)?),
                 };
+                stg.on_activate(&mut ctx);
             }
             Transition::Replace(st) => {
+                stg.on_deactivate(&mut ctx);
                 stages.clear();
                 if ctx.moved {
-                    ctx.stats.update_stat(&ctx.name, ctx.won);
+                    ctx.stats.update_stat(&ctx.name, ctx.won, ctx.elapsed);
                     if !ctx.custom {
                         ctx.stats.save();
                     }
@@ -157,6 +162,7 @@ fn main_loop(cli: &opts::CliOpts) -> Result<()> {
                     }
                     _ => panic!("unimplemented"),
                 };
+                ctx.reset();
             }
         }
     }

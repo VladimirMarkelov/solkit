@@ -174,6 +174,8 @@ Important notes:
 Until you move any card, you can exit an application or restart the solitaire without changing the solitaire's statistics.
 - `solkit` does not load and saves statistics when you play a custom solitaire.
 The application maintains statistics only for built-in solitaires.
+- `solkit` tracks time spent for each solitaire and displays it in solitaire selection dialog.
+The time is tracked only while playing a solitaire: if you open menu by pressing `ESC`, `solkit` pauses time tracking. 
 
 ## How to create your own solitaire
 

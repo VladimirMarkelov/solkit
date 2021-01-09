@@ -441,4 +441,12 @@ impl<'a> Strategy for PlayStg<'a> {
 
         Ok(())
     }
+
+    fn on_activate(&self, ctx: &mut Context) {
+        ctx.unpause();
+    }
+
+    fn on_deactivate(&self, ctx: &mut Context) {
+        ctx.pause();
+    }
 }

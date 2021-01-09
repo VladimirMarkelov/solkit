@@ -1,3 +1,5 @@
+use std::time::{Duration, SystemTime};
+
 use crossterm::event::Event;
 
 use solkit::err::SolError;
@@ -31,11 +33,15 @@ pub(crate) struct Context {
     pub(crate) moved: bool, // to avoid changing stats if no move was done
     pub(crate) won: bool,
     pub(crate) custom: bool, // app launched with a custom solitaire
+    pub(crate) elapsed: Duration,
+    started: SystemTime,
 }
 
 pub(crate) trait Strategy {
     fn process_event(&mut self, ctx: &mut Context, scr: &mut Screen, event: Event) -> Result<Transition, SolError>;
     fn draw(&self, ctx: &mut Context, scr: &mut Screen, theme: &dyn Theme) -> Result<(), SolError>;
+    fn on_activate(&self, ctx: &mut Context);
+    fn on_deactivate(&self, ctx: &mut Context);
 }
 
 impl Context {
@@ -49,6 +55,20 @@ impl Context {
             moved: false,
             won: false,
             custom: false,
+            elapsed: Duration::new(0, 0),
+            started: SystemTime::now(),
         }
+    }
+    pub(crate) fn pause(&mut self) {
+        if let Ok(elapsed) = self.started.elapsed() {
+            self.elapsed += elapsed;
+        }
+    }
+    pub(crate) fn unpause(&mut self) {
+        self.started = SystemTime::now();
+    }
+    pub(crate) fn reset(&mut self) {
+        self.started = SystemTime::now();
+        self.elapsed = Duration::new(0, 0);
     }
 }

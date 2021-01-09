@@ -85,4 +85,7 @@ impl Strategy for HelpStg {
         }
         Ok(())
     }
+
+    fn on_activate(&self, _ctx: &mut Context) {}
+    fn on_deactivate(&self, _ctx: &mut Context) {}
 }

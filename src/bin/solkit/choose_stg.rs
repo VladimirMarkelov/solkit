@@ -7,6 +7,7 @@ use solkit::err::SolError;
 use solkit::gconf::Conf;
 
 use crate::primitive::{Border, Screen};
+use crate::stats::duration_to_human;
 use crate::strategy::{Context, Strategy, Transition, TransitionStage};
 use crate::theme::Theme;
 
@@ -156,11 +157,11 @@ impl Strategy for ChooseStg {
         let (fg, bg) = theme.base_colors();
         scr.colors(fg, bg);
         scr.draw_frame(x, y, self.width + 2, self.height + 2, Border::Double);
-        let name_w = self.width - 2 * COUNT_W - PERCENT_W - 3;
+        let name_w = self.width - 3 * COUNT_W - PERCENT_W - 3;
 
         let (xpos, ypos) = (x + 1, y + 1);
-        let titles: Vec<&'static str> = vec!["Solitaire", "Played", "Won", "%"];
-        let widths: Vec<u16> = vec![name_w, COUNT_W, COUNT_W, PERCENT_W];
+        let titles: Vec<&'static str> = vec!["Solitaire", "Played", "Won", "%", "Time"];
+        let widths: Vec<u16> = vec![name_w, COUNT_W, COUNT_W, PERCENT_W, COUNT_W];
         let mut shift = 0u16;
         for (title, width) in titles.iter().zip(widths.iter()) {
             let dx = shift_in(title, *width) + shift;
@@ -168,13 +169,17 @@ impl Strategy for ChooseStg {
             shift += width + 1;
         }
 
-        scr.write_char('│', xpos + name_w, ypos);
-        scr.write_char('│', xpos + name_w + COUNT_W + 1, ypos);
-        scr.write_char('│', xpos + name_w + COUNT_W * 2 + 2, ypos);
         scr.write_hline(xpos, ypos + 1, self.width, Border::Single);
-        scr.write_char('┴', xpos + name_w, ypos + 1);
-        scr.write_char('┴', xpos + name_w + COUNT_W + 1, ypos + 1);
-        scr.write_char('┴', xpos + name_w + COUNT_W * 2 + 2, ypos + 1);
+        let mut xx = xpos;
+        for ww in widths.iter().take(widths.len() - 1) {
+            if xx == xpos {
+                xx += ww;
+            } else {
+                xx += ww + 1;
+            }
+            scr.write_char('│', xx, ypos);
+            scr.write_char('┴', xx, ypos + 1);
+        }
 
         for idx in 0..self.height - 2 {
             if idx >= self.top + self.sols.len() as u16 {
@@ -204,10 +209,15 @@ impl Strategy for ChooseStg {
                 format!("{:5.1}", stats.won as f32 / stats.played as f32)
             };
             let percent_str = format!("{:>width$}", prc_str, width = PERCENT_W as usize);
+            let time_played_str = format!("{:>width$}", duration_to_human(stats.spent), width = COUNT_W as usize);
             scr.write_string(&played_str, x + 1 + name_w + 1, y + 3 + idx);
             scr.write_string(&won_str, x + 1 + name_w + COUNT_W + 2, y + 3 + idx);
             scr.write_string(&percent_str, x + 1 + name_w + COUNT_W * 2 + 2, y + 3 + idx);
+            scr.write_string(&time_played_str, x + 1 + name_w + COUNT_W * 2 + PERCENT_W + 3, y + 3 + idx);
         }
         Ok(())
     }
+
+    fn on_activate(&self, _ctx: &mut Context) {}
+    fn on_deactivate(&self, _ctx: &mut Context) {}
 }
