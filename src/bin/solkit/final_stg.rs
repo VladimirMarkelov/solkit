@@ -8,10 +8,10 @@ use crate::primitive::{Border, Screen};
 use crate::strategy::{Context, Strategy, Transition, TransitionStage};
 use crate::theme::Theme;
 
-const ITEM_COUNT: usize = 3;
+const ITEM_COUNT: usize = 4;
 const ITEM_HEIGHT: u16 = 3;
 const MENU_WIDTH: u16 = 28;
-const MENU_ITEMS: [&str; 3] = ["Play again", "Choose solitaire", "Exit application"];
+const MENU_ITEMS: [&str; 4] = ["Back to game", "Play again", "Choose solitaire", "Exit application"];
 
 // menu displayed on ESC or when a solitaire is solved
 pub(crate) struct FinalStg {
@@ -48,8 +48,10 @@ impl Strategy for FinalStg {
                     if self.selected == ITEM_COUNT - 1 {
                         return Ok(Transition::Exit);
                     } else if self.selected == 0 {
-                        return Ok(Transition::Replace(TransitionStage::Play));
+                        return Ok(Transition::Pop);
                     } else if self.selected == 1 {
+                        return Ok(Transition::Replace(TransitionStage::Play));
+                    } else if self.selected == 2 {
                         return Ok(Transition::Replace(TransitionStage::Choose));
                     }
                 }
