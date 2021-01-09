@@ -1,4 +1,4 @@
-use crossterm::event::{Event, KeyCode};
+use crossterm::event::{Event, KeyCode, MouseButton, MouseEvent};
 use crossterm::terminal;
 use unicode_width::UnicodeWidthStr;
 
@@ -58,6 +58,19 @@ impl Strategy for FinalStg {
 
                 _ => {}
             },
+            Event::Mouse(ev) => {
+                if let MouseEvent::Down(btn, x, y, _) = ev {
+                    if let MouseButton::Left = btn {
+                        match scr.what_at(x, y) {
+                            1 => return Ok(Transition::Pop),
+                            2 => return Ok(Transition::Replace(TransitionStage::Play)),
+                            3 => return Ok(Transition::Replace(TransitionStage::Choose)),
+                            4 => return Ok(Transition::Exit),
+                            _ => {}
+                        }
+                    }
+                }
+            }
             Event::Resize(_, _) => {
                 let (width, height) = match terminal::size() {
                     Err(e) => return Err(SolError::Unexpected(format!("{:?}", e))),
@@ -72,7 +85,6 @@ impl Strategy for FinalStg {
                 ctx.w = width;
                 ctx.h = height;
             }
-            _ => {}
         }
         Ok(Transition::None)
     }
