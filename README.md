@@ -29,7 +29,7 @@ The application provides two themes. The dark one(default one) that looks like a
 
 <img src="./images/solkit_dark.png" alt="Dark theme">
 
-dark theme with four suit color enabled:
+dark theme with four suit colors enabled:
 
 <img src="./images/solkit_dark_four_colors.png" alt="Dark theme with four suit colors">
 
