@@ -1,4 +1,4 @@
-use crate::card::{Face, Suit};
+use crate::card::{Card, Face, Suit};
 use crate::err::SolError;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -59,10 +59,11 @@ impl PileConf {
 // foundation pile configuration
 #[derive(Clone, Copy)]
 pub struct FndSlot {
-    pub first: Face,       // face of the card that starts the pile
-    pub suit: Suit,        // suit of the card that starts the pile
-    pub forder: FaceOrder, // face order
-    pub sorder: SuitOrder, // suit order
+    pub first: Face,          // face of the card that starts the pile
+    pub suit: Suit,           // suit of the card that starts the pile
+    pub forder: FaceOrder,    // face order
+    pub sorder: SuitOrder,    // suit order
+    pub filler: Option<Card>, // the foundation will have this card at start (i.e, the pile is never empty)
 }
 
 // free-cell configuration

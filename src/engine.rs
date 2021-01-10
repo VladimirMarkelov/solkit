@@ -153,19 +153,28 @@ impl Pos {
 }
 
 pub struct Game<'a> {
-    conf: &'a Conf,   // selected solitaire rules
-    deck: Deck,       // a deck
-    selected: Pos,    // position of the cursor in play area
-    undo: UndoList,   // list of game snapshots
-    piles: Vec<Pile>, // order: fnd, cols, temp, pile
-    redeals: i8,      // redeals left
+    conf: &'a Conf,     // selected solitaire rules
+    deck: Deck,         // a deck
+    selected: Pos,      // position of the cursor in play area
+    undo: UndoList,     // list of game snapshots
+    piles: Vec<Pile>,   // order: fnd, cols, temp, pile
+    initial: Vec<Card>, // list of intial card of foundation piies (for example see Alhambra)
+    redeals: i8,        // redeals left
 }
 
 impl<'a> Game<'a> {
     pub fn init(conf: &'a Conf) -> Result<Game<'a>, SolError> {
         let deck = Deck::new(conf.deck_count)?;
         let redeals = conf.redeals();
-        let mut g = Game { conf, deck, undo: Vec::new(), piles: Vec::new(), selected: Pos::new(), redeals };
+        let mut g = Game {
+            conf,
+            deck,
+            undo: Vec::new(),
+            piles: Vec::new(),
+            initial: Vec::new(),
+            selected: Pos::new(),
+            redeals,
+        };
         g.init_cols()?;
         // at start the current card is always the first one in the first column
         g.selected = Pos { col: g.first_col().unwrap(), row: 0 };
@@ -784,7 +793,7 @@ impl<'a> Game<'a> {
         let mut col = Vec::new();
         for i in 0..count {
             match self.deck.deal_card() {
-                None => return Err(SolError::InsufficientFor("play area".to_string())),
+                None => return Err(SolError::InsufficientFor("columns".to_string())),
                 Some(mut crd) => {
                     if count - i <= up {
                         crd.up = true;
@@ -806,7 +815,14 @@ impl<'a> Game<'a> {
             conf.start_suit = wc.suit;
             conf.suit_order = wc.sorder;
             conf.face_order = wc.forder;
-            let p = Pile { conf, cards: Vec::new() };
+            let cards = if let Some(mut card) = wc.filler {
+                card.up = true;
+                self.initial.push(card);
+                vec![card]
+            } else {
+                Vec::new()
+            };
+            let p = Pile { conf, cards };
             self.piles.push(p);
         }
         for i in 0..self.col_count() {
@@ -850,6 +866,9 @@ impl<'a> Game<'a> {
     // deal cards to all piles at the solitaire initialization
     pub fn init_cols(&mut self) -> Result<(), SolError> {
         self.init_piles();
+        if !self.initial.is_empty() {
+            self.deck.remove_cards(&self.initial);
+        }
         let idx = self.first_col().unwrap();
         let ccols = self.conf.cols.clone();
         let mut first_col_card = Card::new_empty();

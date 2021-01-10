@@ -219,9 +219,11 @@ Initial card's face for an empty column:
 - any - an arbitrary card can start the pile
 - none - if the pile gets empty, the pile cannot be refilled
 
-For card faces the valid values are `A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, any, none`. 
-`Any` is usually used to allow any card to start a pile when it gets empty.
-`None` indicated that if a pile gets empty, it cannot be refilled.
+For card faces the valid values are `A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, any, first, none`.
+- `Any` is usually used to allow any card to start a pile when it gets empty.
+- `First`(alternative values `Random` and `Column`) - can be used for foundation only - means the top card of the first non-empty column.
+Sometimes a solitaire is difficult and to make it a little easier(or to add some randomness) a solitaire declares the start foundation card a card that can be played right after dealing cards.
+- `None` indicates that if a pile gets empty, it cannot be refilled.
 
 For suits values are `spade`, `club`, `diamond`, `heart`, and `any`.
 The last value is used to allow a card of any suit to start the pile if it is empty.
@@ -276,18 +278,32 @@ deal_to = waste
 
 The section starts with `[foundation]`. The section defines properties of every foundation pile.
 The number of items equal the number of foundation piles: from `1` to `8` items.
-Every item starts with `column =` and has the same format:
+Every item starts with `column =` and has on of the following formats:
 
 ```
 column = FirstFace, FirstSuit, FaceOrder, SuitOrder
 ```
 
+or
+
+```
+column = FirstFace, FirstSuit, FaceOrder, SuitOrder, InitialFace, InitialSuit
+```
+
+The former format is used for foundation piles that are empty at start.
+The latter one is useful to declare a foundation pile that must contain a specific card at start.
+It can be done with setting correct `FirstFace` and `FirstSuit` as well.
+The only difference that `IntialFace` is always valid card face while `FirstFace` can have extra "virtual" values like `any` or `first`.
+But setting initial cards makes a solitaire a bit easier as a few cards are already put to foundation.
+
 | Property |  Definition | Values |
 | --- |  --- | --- |
-| `FirstFace` | The face of the card that must be put first to the pile | `A,2,...,Q,K,any` |
+| `FirstFace` | The face of the card that must be put first to the pile | `A,2,...,Q,K,any,first` |
 | `FirstSuit` | The suit of the card that must be put first to the pile | `spade,club,diamond,heart` |
 | `FaceOrder` | In what face order cards must be put to the pile | `ascending,descending,any` or `asc,desc,any` |
 | `SuitOrder` | In what suit order cards must be put to the pile | `same suit,same color,alternate color,except same` |
+| `InitialFace` | The face of the card that is put to the pile at start | `A,2,...,Q,K` |
+| `InitialSuit` | The suit of the card that is put to the pile at start | `spade,club,diamond,heart` |
 
 Klondike section:
 

@@ -156,6 +156,13 @@ impl Card {
     pub fn is_up(&self) -> bool {
         self.up
     }
+    // return true if the card is real card from a deck and not a virtual one(e.g, Suit!=Any)
+    pub fn is_regular(&self) -> bool {
+        if self.suit == Suit::Any {
+            return false;
+        }
+        !matches!(self.face, Face::Empty | Face::Any | Face::Unavail | Face::Column)
+    }
 }
 
 pub struct Deck {
@@ -193,6 +200,21 @@ impl Deck {
         }
         self.idx += 1;
         Some(self.cards[self.idx - 1])
+    }
+    pub fn remove_cards(&mut self, cards: &[Card]) {
+        let mut c = cards.to_vec();
+        let mut rng = WyRand::new();
+        rng.shuffle(&mut c);
+        let mut from_left = true;
+        for card in c.iter() {
+            let pos = if from_left {
+                self.cards.iter().position(|&c| c.face == card.face && c.suit == card.suit).expect("card must exist")
+            } else {
+                self.cards.iter().rposition(|&c| c.face == card.face && c.suit == card.suit).expect("card must exist")
+            };
+            self.cards.remove(pos);
+            from_left = !from_left;
+        }
     }
 }
 

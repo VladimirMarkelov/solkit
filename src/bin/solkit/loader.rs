@@ -1,4 +1,4 @@
-use solkit::card::{str_to_face, str_to_suit, Face, Suit};
+use solkit::card::{str_to_face, str_to_suit, Card, Face, Suit};
 use solkit::err::SolError;
 use solkit::gconf::{
     str_to_face_order, str_to_suit_order, ColConf, Conf, FaceOrder, FndSlot, PileConf, Playable, SuitOrder, TempConf,
@@ -136,15 +136,30 @@ fn parse_foundation(conf: &mut Conf, data: &[String], idx: usize) -> Result<usiz
 }
 
 fn parse_fnd_slot(s: &str) -> Result<FndSlot, SolError> {
-    let mut slot = FndSlot { first: Face::Any, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit };
+    let mut slot = FndSlot {
+        first: Face::Any,
+        suit: Suit::Any,
+        forder: FaceOrder::Asc,
+        sorder: SuitOrder::SameSuit,
+        filler: None,
+    };
     let v: Vec<&str> = s.split(',').collect();
-    if v.len() != 4 {
+    if v.len() != 4 && v.len() != 6 {
         return Err(SolError::InvalidConfOptionValue("column".to_string(), s.to_string()));
     }
     slot.first = str_to_face(v[0].trim())?;
     slot.suit = str_to_suit(v[1].trim())?;
     slot.forder = str_to_face_order(v[2].trim())?;
     slot.sorder = str_to_suit_order(v[3].trim())?;
+    if v.len() == 6 {
+        let face = str_to_face(v[4].trim())?;
+        let suit = str_to_suit(v[4].trim())?;
+        let card = Card::new(suit, face);
+        if !card.is_regular() {
+            return Err(SolError::InvalidConfOptionValue("column initial card".to_string(), s.to_string()));
+        }
+        slot.filler = Some(card);
+    }
     Ok(slot)
 }
 
