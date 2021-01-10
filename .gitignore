@@ -7,4 +7,6 @@
 *.log
 *.xcf
 *.desc
+todo.txt
+done.txt
 config.toml
