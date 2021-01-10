@@ -1,7 +1,7 @@
 solkit (0.5.0) unstable; urgency=medium
 
   * A lot of new solitaires ---- describe
-  * New rule for first foundation card: random|column
+  * New rule for first foundation card: first|random|column
   * New rule for suit order: any except the same suit
   * New option for foundation: initial card, to make foundation pile prefilled
   * Solkit tracks time spent on each solitaire and displays the total time in
