@@ -13,7 +13,8 @@
 ## Intro
 
 `SolKit` is a solitaire construction kit and a lot of playable solitaires out of the box.
-You can create a new solitaire with your own rules and test it. 
+The application contains 26 built-in solitaires (23 distinct ones and 3 modifications).
+Moreover, you can create a new solitaire with your own rules and test it.
 If a new solitaire looks good to you, please, send me its rules(the file you passed to `solkit`) or open an PR and I'll include it into a new release.
 The built-in set of rules is limited, but you can experiment with different rule combinations and modifications:
 
