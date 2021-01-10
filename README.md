@@ -29,6 +29,10 @@ The application provides two themes. The dark one(default one) that looks like a
 
 <img src="./images/solkit_dark.png" alt="Dark theme">
 
+dark theme with four suit color enabled:
+
+<img src="./images/solkit_dark_four_colors.png" alt="Dark theme with four suit colors">
+
 and Classic theme that looks like a table to play card games with green background:
 
 <img src="./images/solkit_classic.png" alt="Classic theme">
