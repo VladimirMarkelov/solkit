@@ -54,6 +54,7 @@ Suit order is one of:
 - `♥ ♥ ♥ ♥` - put a card only of the same suit
 - `♥ ♦ ♦ ♥` - put a card of the same color
 - `♥ ♠ ♦ ♣` - put a card of an alternate color
+- `♥ ♦ ♣ ♠` - put a card of any suit except the same one
 - `-` - either no restriction(put a card of any suit), or is not applicable(e.g., deck or free cell pile)
 
 The last section is selected and marked cards.
@@ -202,6 +203,8 @@ Suit order can be:
 
 - same suit - you can put a card to a pile only if its top card suit equal the card suit
 - same color - you can put spades and clubs together, or diamonds and hearts together
+- except same - you can put a card of any suit except the same one
+- any - you can put a card of any suit
 - alternate color - you can put "red" suits(diamonds and hearts) on "black" ones(clubs and spades) and vice versa
 
 Face order one of:
@@ -284,7 +287,7 @@ column = FirstFace, FirstSuit, FaceOrder, SuitOrder
 | `FirstFace` | The face of the card that must be put first to the pile | `A,2,...,Q,K,any` |
 | `FirstSuit` | The suit of the card that must be put first to the pile | `spade,club,diamond,heart` |
 | `FaceOrder` | In what face order cards must be put to the pile | `ascending,descending,any` or `asc,desc,any` |
-| `SuitOrder` | In what suit order cards must be put to the pile | `same suit,same color,alternate color` |
+| `SuitOrder` | In what suit order cards must be put to the pile | `same suit,same color,alternate color,except same` |
 
 Klondike section:
 

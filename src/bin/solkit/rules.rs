@@ -758,14 +758,14 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
         playable: Playable::Top,
         pile: Some(PileConf { deal_by: 1, redeals: 0, pile_to_cols: false }),
         fnd: vec![
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
-            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::ExceptSame },
         ],
         temp: None,
         cols: vec![
@@ -780,7 +780,7 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
             ColConf { count: 4, up: 4, take_only: false },
         ],
         col_forder: FaceOrder::Desc,
-        col_sorder: SuitOrder::Any,
+        col_sorder: SuitOrder::ExceptSame,
         col_refill: Face::K,
     };
     rules.insert(conf.name.clone(), conf);
@@ -815,7 +815,7 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
             ColConf { count: 3, up: 2, take_only: false },
         ],
         col_forder: FaceOrder::Desc,
-        col_sorder: SuitOrder::Any,
+        col_sorder: SuitOrder::ExceptSame,
         col_refill: Face::Any,
     };
     rules.insert(conf.name.clone(), conf);
@@ -843,7 +843,7 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
             ColConf { count: 7, up: 1, take_only: false },
         ],
         col_forder: FaceOrder::Desc,
-        col_sorder: SuitOrder::Any,
+        col_sorder: SuitOrder::ExceptSame,
         col_refill: Face::Any,
     };
     rules.insert(conf.name.clone(), conf);

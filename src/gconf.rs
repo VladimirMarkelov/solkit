@@ -22,6 +22,7 @@ pub enum SuitOrder {
     SameSuit,
     SameColor,
     AlternateColor,
+    ExceptSame,
     Any,
     Forbid,
 }
@@ -29,6 +30,7 @@ pub enum SuitOrder {
 pub fn str_to_suit_order(s: &str) -> Result<SuitOrder, SolError> {
     match s {
         "same" | "same suit" | "samesuit" => Ok(SuitOrder::SameSuit),
+        "exceptsame" | "except same" | "except" => Ok(SuitOrder::ExceptSame),
         "same color" | "samecolor" => Ok(SuitOrder::SameColor),
         "alternate" | "alternate color" | "alternatecolor" => Ok(SuitOrder::AlternateColor),
         "none" | "forbid" | "disable" => Ok(SuitOrder::Forbid),

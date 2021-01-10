@@ -237,6 +237,7 @@ impl<'a> Game<'a> {
         while idx > 0 {
             let ok_suit = match pile.conf.suit_order {
                 SuitOrder::SameSuit => pile.cards[idx].is_same_suit(&pile.cards[idx - 1]),
+                SuitOrder::ExceptSame => !pile.cards[idx].is_same_suit(&pile.cards[idx - 1]),
                 SuitOrder::SameColor => pile.cards[idx].is_same_color(&pile.cards[idx - 1]),
                 SuitOrder::AlternateColor => !pile.cards[idx].is_same_color(&pile.cards[idx - 1]),
                 SuitOrder::Any => true,
@@ -282,6 +283,7 @@ impl<'a> Game<'a> {
         let top = &pile.cards[pile.cards.len() - 1];
         let ok_suit = match pile.conf.suit_order {
             SuitOrder::SameSuit => card.is_same_suit(top),
+            SuitOrder::ExceptSame => !card.is_same_suit(top),
             SuitOrder::SameColor => card.is_same_color(top),
             SuitOrder::AlternateColor => !card.is_same_color(top),
             SuitOrder::Any => true,

@@ -141,6 +141,7 @@ impl<'a> PlayStg<'a> {
         scr.write_string(ssord, x, y);
         let sorder: &[Suit] = match cfg.suit_order {
             SuitOrder::SameSuit => &[Suit::Heart, Suit::Heart, Suit::Heart, Suit::Heart],
+            SuitOrder::ExceptSame => &[Suit::Heart, Suit::Diamond, Suit::Club, Suit::Spade],
             SuitOrder::SameColor => &[Suit::Heart, Suit::Diamond, Suit::Diamond, Suit::Heart],
             SuitOrder::AlternateColor => &[Suit::Heart, Suit::Spade, Suit::Diamond, Suit::Club],
             _ => &[],

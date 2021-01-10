@@ -4,6 +4,7 @@ solkit (0.5.0) unstable; urgency=medium
   * New rule for first foundation card: random|column
   * Solkit tracks time spent on each solitaire and displays the total time in
     solitaire list dialog
+  * 19 new colitaires (26 in total)
 
  -- Vladimir Markelov <vmatroskin@gmail.com>  ///
 
