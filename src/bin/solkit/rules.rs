@@ -720,5 +720,133 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
     };
     rules.insert(conf.name.clone(), conf);
 
+    let conf = Conf {
+        name: "Good measure".to_string(),
+        chance: None,
+        deck_count: 1,
+        playable: Playable::Top,
+        pile: None,
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+            ColConf { count: 5, up: 5, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::Any,
+        col_refill: Face::Unavail,
+    };
+    rules.insert(conf.name.clone(), conf);
+
+    let conf = Conf {
+        name: "But the same".to_string(),
+        chance: None,
+        deck_count: 2,
+        playable: Playable::Top,
+        pile: Some(PileConf { deal_by: 1, redeals: 0, pile_to_cols: false }),
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::Any },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+            ColConf { count: 4, up: 4, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::Any,
+        col_refill: Face::K,
+    };
+    rules.insert(conf.name.clone(), conf);
+
+    let conf = Conf {
+        name: "Indian".to_string(),
+        chance: None,
+        deck_count: 2,
+        playable: Playable::Top,
+        pile: Some(PileConf { deal_by: 1, redeals: 0, pile_to_cols: false }),
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+            ColConf { count: 3, up: 2, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::Any,
+        col_refill: Face::Any,
+    };
+    rules.insert(conf.name.clone(), conf);
+
+    let conf = Conf {
+        name: "Thumb and pouch".to_string(),
+        chance: None,
+        deck_count: 1,
+        playable: Playable::Any,
+        pile: Some(PileConf { deal_by: 1, redeals: 0, pile_to_cols: false }),
+        fnd: vec![
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+            FndSlot { first: Face::A, suit: Suit::Any, forder: FaceOrder::Asc, sorder: SuitOrder::SameSuit },
+        ],
+        temp: None,
+        cols: vec![
+            ColConf { count: 1, up: 1, take_only: false },
+            ColConf { count: 2, up: 1, take_only: false },
+            ColConf { count: 3, up: 1, take_only: false },
+            ColConf { count: 4, up: 1, take_only: false },
+            ColConf { count: 5, up: 1, take_only: false },
+            ColConf { count: 6, up: 1, take_only: false },
+            ColConf { count: 7, up: 1, take_only: false },
+        ],
+        col_forder: FaceOrder::Desc,
+        col_sorder: SuitOrder::Any,
+        col_refill: Face::Any,
+    };
+    rules.insert(conf.name.clone(), conf);
+
     Ok(rules)
 }
