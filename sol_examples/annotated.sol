@@ -19,9 +19,10 @@ deal_to = waste
 # Must be at least one slot (and no more than 8 slots)
 # From leftmost to rightmost column.
 [foundation]
-# All column properties are mandatory:
+# First four properties are mandatory:
 # First pair is what card can be put to the column when it is empty
-# 1. First card face - card face, or 'any' to allow starting the foundation from any card
+# 1. First card face - card face, or 'any' to allow starting the foundation from any card,
+#    or 'random' to set the first column top card face as the starting one
 # 2. First card suit - 'any' to start from any suit
 # Second pair is in what order next cards must be placed to the foundation
 # 3. Face order - 'ascending' or 'asc' in ascending order(from 'A' to 'K'),
@@ -29,8 +30,13 @@ deal_to = waste
 #    'any' when the next card must have the next or previous face value
 # 4. Suit order - 'same' or 'same suit' - cards must have the same suit,
 #    'same color' - cards must have the same suit color (only spades+clubs or diamonds+hearts),
+#    'except same' - cards can be any suit except the same one,
 #    'alternate' - cards must have alternate colors,
 #    'any' - no suit restrictions, put a card of any suit.
+# 5. Initial card face and
+# 6. Initial card suit are the card that is put to the foundation pile automatically after the deal.
+#    It is similar to First card face and suit but setting Initial ones has the only advanatage:
+#    it makes a solitaire a bit easier as some cards are already in foundation
 column = A, any, ascending, same suit
 column = A, any, ascending, same suit
 column = A, any, ascending, same suit
@@ -59,9 +65,10 @@ refill = K
 #    'any' when the next card must have the next or previous face value
 # 2. Suit order - 'same' or 'same suit' - cards must have the same suit,
 #    'same color' - cards must have the same suit color (only spades+clubs or diamonds+hearts),
+#    'except same' - cards can be any suit except the same one,
 #    'alternate' or 'alternate color' - cards must have alternate colors,
 #    'any' - no suit restrictions, put a card of any suit
-#    'none' or 'disable' - no card can be put to this pile from another pile. Useful to 
+#    'none' or 'disable' - no card can be put to this pile from another pile. Useful to
 #           create "take-only" prefilled columns (like the first one in 'American toad')
 order = descending, alternate color
 # Intial column configuration. Contains two or three values:
