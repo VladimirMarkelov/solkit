@@ -215,7 +215,7 @@ fn builtin_rules() -> Result<HashMap<String, Conf>, SolError> {
             ColConf { count: 11, up: 5, take_only: false },
         ],
         col_forder: FaceOrder::Desc,
-        col_sorder: SuitOrder::AlternateColor,
+        col_sorder: SuitOrder::SameSuit,
         col_refill: Face::K,
     };
     rules.insert(conf.name.clone(), conf);
