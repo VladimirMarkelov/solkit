@@ -492,7 +492,7 @@ pub(crate) fn draw_area(scr: &mut Screen, game: &Game, state: &GameState, theme:
             theme,
         );
 
-        let ch = std::char::from_u32('1' as u32 + (cidx % 10) as u32).unwrap_or(' ');
+        let ch = if cidx == 9 { '0' } else { std::char::from_u32('1' as u32 + cidx as u32).unwrap_or(' ') };
         let (fg, bg) = theme.hint_letter();
         scr.colors(fg, bg);
         scr.kind(0);

@@ -35,6 +35,8 @@ pub struct SlotConf {
     pub take_only: bool,
     // draw top card only or all in a tall column
     pub draw_all: bool,
+    // maximum cards in the pile - 0 = unlimited
+    pub limit: usize,
 }
 
 impl SlotConf {
@@ -52,6 +54,7 @@ impl SlotConf {
             flip: false,
             take_only: false,
             draw_all: false,
+            limit: 0,
         }
     }
     // default settings for a column pile
@@ -68,6 +71,7 @@ impl SlotConf {
             flip: true,
             take_only: false,
             draw_all: true,
+            limit: 0,
         }
     }
     // default settings for a free-cell pile
@@ -84,6 +88,7 @@ impl SlotConf {
             flip: false,
             take_only: false,
             draw_all: false,
+            limit: 1,
         }
     }
     // default settings for deck and waste piles
@@ -100,6 +105,7 @@ impl SlotConf {
             flip: false,
             take_only: true,
             draw_all: false,
+            limit: 0,
         }
     }
 }
@@ -276,6 +282,9 @@ impl<'a> Game<'a> {
             return false;
         }
         let pile = &self.piles[pile_id];
+        if pile.conf.limit != 0 && pile.cards.len() >= pile.conf.limit {
+            return false;
+        }
         if pile.conf.playable == Playable::Top && pos.row != 0 {
             return false;
         }
@@ -809,7 +818,7 @@ impl<'a> Game<'a> {
     fn init_piles(&mut self) {
         // order: fnd, cols, temp, pile
         for idx in 0..self.fnd_count() {
-            let mut conf = SlotConf::new_for_temp();
+            let mut conf = SlotConf::new_for_fnd();
             let wc = &self.conf.fnd[idx];
             conf.start_face = wc.first;
             conf.start_suit = wc.suit;
