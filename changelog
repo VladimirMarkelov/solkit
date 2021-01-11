@@ -1,14 +1,15 @@
-solkit (0.5.0) unstable; urgency=medium
+solkit (1.0.0) unstable; urgency=medium
 
-  * A lot of new solitaires ---- describe
-  * New rule for first foundation card: first|random|column
+  * New rule for first foundation card 'random'(aliases are first and column):
+    to set first foundation card a random one(i.e, first card of first column)
   * New rule for suit order: any except the same suit
   * New option for foundation: initial card, to make foundation pile prefilled
   * Solkit tracks time spent on each solitaire and displays the total time in
     solitaire list dialog
-  * 19 new colitaires (26 in total)
+  * Fixed bug with free cells: they can hold up to one card only
+  * 19 new solitaires (26 in total)
 
- -- Vladimir Markelov <vmatroskin@gmail.com>  ///
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Sun, 10 Jan 2021 16:50:11 -0800
 
 solkit (0.4.8) unstable; urgency=medium
 
@@ -42,7 +43,7 @@ solkit (0.4.5) unstable; urgency=medium
 
 solkit (0.4.4) unstable; urgency=medium
 
-  * Added documetation
+  * Added documentation
   * Example solitaire fixes
 
  -- Vladimir Markelov <vmatroskin@gmail.com>  Sun, 20 Dec 2020 19:57:41 -0800
