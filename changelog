@@ -1,3 +1,9 @@
+solkit (1.0.1) unstable; urgency=medium
+
+  * Fixed "Russian solitaire" rules
+
+ -- Vladimir Markelov <vmatroskin@gmail.com>  Sun, 10 Jan 2021 22:09:28 -0800
+
 solkit (1.0.0) unstable; urgency=medium
 
   * New rule for first foundation card 'random'(aliases are first and column):
